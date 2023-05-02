@@ -1,0 +1,7 @@
+#!/bin/bash
+source ./env
+curl -sSL "${url}${file}" -o "/var/tmp/${file}"
+mkdir "$chroot"
+sudo tar -C "${chroot}" -xpf "/var/tmp/${file}" --xattrs-include='*.*' --numeric-owner 2>/dev/null
+rootch
+unmount

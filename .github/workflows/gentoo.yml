@@ -1,0 +1,22 @@
+name: Build
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  Start:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Start
+      run: ./start
+
+    - name: Upload
+      run: |
+        export GITHUB_TOKEN=${{ secrets.HUBGIT_TOKEN }}
+        ./upload

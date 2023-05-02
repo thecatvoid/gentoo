@@ -1,0 +1,20 @@
+app-admin/doas persist -pam
+media-plugins/alsa-plugins pulseaudio
+media-libs/mesa -llvm -osmesa -vaapi opengl
+x11-drivers/xf86-video-intel uxa xvmc tools
+gui-apps/foot -grapheme-clustering
+dev-libs/bemenu wayland
+media-video/ffmpeg v4l -X -vorbis -xvid x265 vaapi pulseaudio
+x11-terms/kitty X wayland
+net-misc/aria2 bittorrent
+media-libs/gst-plugins-base theora
+media-video/mpv drm sdl gbm vaapi wayland libmpv
+x11-libs/libva X wayland
+net-firewall/iptables netlink pcap nftables conntrack
+net-firewall/nftables -python -json xtables
+app-text/tesseract webp
+media-libs/leptonica webp
+dev-lang/python tk
+x11-libs/pango sysprof
+sys-kernel/gentoo-sources symlink
+dev-libs/libdbusmenu gtk3
