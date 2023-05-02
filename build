@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
-#cd "$HOME" || exit
-#source /etc/profile
-#rm -rf /etc/portage/
-#emerge-webrsync
-#cp -af "${HOME}/portage" /etc/
-#ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
-#emerge dev-vcs/git sys-kernel/gentoo-sources
-#rm -rf /var/db/repos/* 
-#emerge --sync
+cd "$HOME" || exit
+source /etc/profile
+rm -rf /etc/portage/
+emerge-webrsync
+cp -af "${HOME}/portage" /etc/
+ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
+emerge dev-vcs/git sys-kernel/gentoo-sources
+rm -rf /var/db/repos/* 
+emerge --sync
 
 while read -r pkg
 do
