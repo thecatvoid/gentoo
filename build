@@ -25,4 +25,4 @@ done < "${HOME}/package_list"
 emerge -uN "${pkgs[@]}"
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
-qlist -I | grep -Ev -- 'acct-group/.*|acct-user/.*|.*/.*-bin|sys-kernel/.*-sources|virtual/.*' | xargs quickpkg --include-config=y
+qlist -I | grep -Ev -- '.*/.*-bin|sys-kernel/.*-sources' | xargs quickpkg --include-config=y
