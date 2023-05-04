@@ -112,6 +112,7 @@ x11-libs/libX11
 x11-libs/libXinerama
 x11-libs/libxkbcommon
 x11-libs/pango
+x11-misc/i3status
 x11-misc/xdg-user-dirs
 x11-misc/xdg-user-dirs-gtk
 x11-misc/xdg-utils
