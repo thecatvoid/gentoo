@@ -22,7 +22,7 @@ fi
 pkgs+=("$tmp")
 done < "${HOME}/package_list"
 
-emerge -uN "${pkgs[@]}"
+emerge -uDN --with-bdeps=y "${pkgs[@]}" @world
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
 qlist -I | grep -Ev -- 'sys-kernel/.*-sources' | xargs quickpkg --include-config=y
