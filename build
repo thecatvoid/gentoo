@@ -20,7 +20,7 @@ fi
 pkgs+=("$tmp")
 done < "${HOME}/package_list"
 
-emerge -uN "${pkgs[@]}" || exit 1
+echo "${pkgs[@]}" | xargs -n1 emerge || exit 1
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources' | xargs quickpkg --include-config=y
