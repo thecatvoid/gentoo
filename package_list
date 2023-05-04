@@ -61,6 +61,7 @@ net-misc/networkmanager
 net-misc/openssh
 net-misc/rsync
 net-misc/yt-dlp
+net-vpn/wireguard-tools
 net-wireless/iw
 net-wireless/iwd
 net-wireless/wireless-regdb
