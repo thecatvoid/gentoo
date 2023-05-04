@@ -31,6 +31,7 @@ dev-libs/wayland-protocols
 dev-python/pip
 dev-util/sysprof-capture
 dev-util/android-tools
+dev-util/wayland-scanner
 gui-apps/foot
 gui-apps/grim
 gui-apps/swaybg
