@@ -14,15 +14,13 @@ while read -r pkg
 do
 ver="$(grep -HEo 'KEYWORDS=.*[^~]amd64[^-]' /var/db/repos/*/${pkg}/*.ebuild | grep -o '/var/db/.*/.*ebuild' | sort -n | tail -1 | sed 's/.ebuild//g' | xargs -I{} basename {} | grep -o -- '-[0-9].*')" || true
 if [[ $ver == *-[0-9]* ]]
-then
-tmp="=${pkg}${ver}"
-else
-tmp="${pkg}${ver}"
+then tmp="=${pkg}${ver}"
+else tmp="${pkg}${ver}"
 fi
 pkgs+=("$tmp")
 done < "${HOME}/package_list"
 
-emerge -uDN --with-bdeps=y "${pkgs[@]}" @world
+emerge --update "${pkgs[@]}" @world
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
-qlist -I | grep -Ev -- 'sys-kernel/.*-sources' | xargs quickpkg --include-config=y
+qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources' | xargs quickpkg --include-config=y
