@@ -9,7 +9,6 @@ ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /
 emerge dev-vcs/git sys-kernel/gentoo-sources
 rm -rf /var/db/repos/* 
 emerge --sync
-qlist -I >> "${HOME}/package_list"
 
 while read -r pkg
 do
