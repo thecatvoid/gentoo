@@ -49,6 +49,7 @@ media-libs/gst-plugins-base
 media-libs/mesa
 media-plugins/alsa-plugins
 media-sound/pavucontrol
+media-sound/pulseaudio
 media-sound/alsa-utils
 media-tv/v4l-utils
 media-video/ffmpeg
