@@ -9,6 +9,7 @@ ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /
 emerge dev-vcs/git sys-kernel/gentoo-sources
 rm -rf /var/db/repos/* 
 emerge --sync
+list="${HOME}/package_list"
 
 while read -r pkg
 do
@@ -18,9 +19,9 @@ then tmp="=${pkg}${ver}"
 else tmp="${pkg}${ver}"
 fi
 pkgs+=("$tmp")
-done < "${HOME}/package_list"
+done < "$list"
 
-exclude="$(awk '{print $1}' /etc/portage/package.use | grep -v '#' | xargs printf '%s ')"
+exclude="$(awk '{print $1}' /etc/portage/package.use $list | grep -v '#' | xargs printf '%s ')"
 emerge --usepkg-exclude="$exclude" "${pkgs[@]}" || exit 1
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
