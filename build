@@ -6,7 +6,7 @@ rm -rf /etc/portage/
 emerge-webrsync
 cp -af "${HOME}/portage" /etc/
 ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
-emerge dev-vcs/git sys-kernel/gentoo-sources
+emerge --usepkg-exclude="dev-vcs/git sys-kernel/gentoo-sources" dev-vcs/git sys-kernel/gentoo-sources
 rm -rf /var/db/repos/* 
 emerge --sync
 list="${HOME}/package_list"
