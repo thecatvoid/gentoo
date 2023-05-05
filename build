@@ -20,7 +20,8 @@ fi
 pkgs+=("$tmp")
 done < "${HOME}/package_list"
 
-emerge "${pkgs[@]}" || exit 1
+exclude="$(awk '{print $1}' /etc/portage/package.use | grep -v '#' | xargs printf '%s ')"
+emerge --usepkg-exclude="$exclude" "${pkgs[@]}" || exit 1
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources' | xargs quickpkg --include-config=y
