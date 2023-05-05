@@ -16,6 +16,7 @@ app-misc/jq
 app-misc/tmate
 app-misc/tmux
 app-misc/wayland-utils
+app-portage/gentoolkit
 app-portage/portage-utils
 app-shells/fzf
 app-shells/zsh
@@ -29,8 +30,8 @@ dev-libs/bemenu
 dev-libs/wayland
 dev-libs/wayland-protocols
 dev-python/pip
-dev-util/sysprof-capture
 dev-util/android-tools
+dev-util/sysprof-capture
 dev-util/wayland-scanner
 gui-apps/foot
 gui-apps/grim
@@ -48,9 +49,9 @@ media-libs/alsa-ucm-conf
 media-libs/gst-plugins-base
 media-libs/mesa
 media-plugins/alsa-plugins
+media-sound/alsa-utils
 media-sound/pavucontrol
 media-sound/pulseaudio
-media-sound/alsa-utils
 media-tv/v4l-utils
 media-video/ffmpeg
 media-video/mpv

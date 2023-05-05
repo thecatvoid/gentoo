@@ -12,14 +12,13 @@ emerge --sync
 
 while read -r pkg
 do
-        ver="$(grep -HEo 'KEYWORDS=.*[^~]amd64[^-]' /var/db/repos/*/${pkg}/*.ebuild | grep -o '/var/db/.*/.*ebuild' | sort -n | tail -1 | sed 's/.ebuild//g' | xargs -I{} basename {} | grep -o -- '-[0-9].*')"
-        true
-        
+        ver="$(grep -HEo 'KEYWORDS=.*[^~]amd64[^-]' /var/db/repos/*/${pkg}/*.ebuild | grep -o '/var/db/.*/.*ebuild' | sort -n | tail -1 | sed 's/.ebuild//g' | xargs -I{} basename {} | grep -o -- '-[0-9].*')" || true
+
         if [[ $ver == *-[0-9]* ]]; then tmp="=${pkg}${ver}"; else tmp="${pkg}${ver}"; fi
         pkgs+=("$tmp")
-done < "$list"
+done < "${HOME}/package_list"
 
 emerge "${pkgs[@]}" || exit 1
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
-qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources' | xargs quickpkg --include-config=y
+qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
