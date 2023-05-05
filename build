@@ -6,23 +6,20 @@ rm -rf /etc/portage/
 emerge-webrsync
 cp -af "${HOME}/portage" /etc/
 ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
-emerge --usepkg-exclude="dev-vcs/git sys-kernel/gentoo-sources" dev-vcs/git sys-kernel/gentoo-sources
+emerge dev-vcs/git sys-kernel/gentoo-sources
 rm -rf /var/db/repos/* 
 emerge --sync
-list="${HOME}/package_list"
 
 while read -r pkg
 do
-ver="$(grep -HEo 'KEYWORDS=.*[^~]amd64[^-]' /var/db/repos/*/${pkg}/*.ebuild | grep -o '/var/db/.*/.*ebuild' | sort -n | tail -1 | sed 's/.ebuild//g' | xargs -I{} basename {} | grep -o -- '-[0-9].*')" || true
-if [[ $ver == *-[0-9]* ]]
-then tmp="=${pkg}${ver}"
-else tmp="${pkg}${ver}"
-fi
-pkgs+=("$tmp")
+        ver="$(grep -HEo 'KEYWORDS=.*[^~]amd64[^-]' /var/db/repos/*/${pkg}/*.ebuild | grep -o '/var/db/.*/.*ebuild' | sort -n | tail -1 | sed 's/.ebuild//g' | xargs -I{} basename {} | grep -o -- '-[0-9].*')"
+        true
+        
+        if [[ $ver == *-[0-9]* ]]; then tmp="=${pkg}${ver}"; else tmp="${pkg}${ver}"; fi
+        pkgs+=("$tmp")
 done < "$list"
 
-exclude="$(awk '{print $1}' /etc/portage/package.use $list | grep -v '#' | xargs printf '%s ')"
-emerge --usepkg-exclude="$exclude" "${pkgs[@]}" || exit 1
+emerge "${pkgs[@]}" || exit 1
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources' | xargs quickpkg --include-config=y
