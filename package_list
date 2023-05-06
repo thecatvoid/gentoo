@@ -70,6 +70,7 @@ net-wireless/iwd
 net-wireless/wireless-regdb
 net-wireless/wpa_supplicant
 sys-apps/bat
+sys-apps/busybox
 sys-apps/debianutils
 sys-apps/dmidecode
 sys-apps/file
