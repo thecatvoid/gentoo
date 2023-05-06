@@ -38,6 +38,7 @@ gui-apps/grim
 gui-apps/swaybg
 gui-apps/swaylock
 gui-apps/waybar
+gui-apps/wf-recorder
 gui-apps/wl-clipboard
 gui-apps/wofi
 gui-libs/gtk
