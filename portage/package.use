@@ -18,6 +18,7 @@ x11-libs/pango sysprof
 sys-kernel/gentoo-sources symlink
 dev-libs/libdbusmenu gtk3
 sys-devel/clang extra static-analyzer xml -debug -doc -test -verify-sig
-sys-apps/busybox -pam static
 gui-apps/swaybg gdk-pixbuf
+sys-apps/busybox -pam static
 virtual/libcrypt static-libs
+sys-libs/libxcrypt static-libs
