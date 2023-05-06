@@ -20,3 +20,4 @@ dev-libs/libdbusmenu gtk3
 sys-devel/clang extra static-analyzer xml -debug -doc -test -verify-sig
 sys-apps/busybox -pam static
 gui-apps/swaybg gdk-pixbuf
+virtual/libcrypt static-libs
