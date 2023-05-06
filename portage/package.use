@@ -8,7 +8,7 @@ media-video/ffmpeg v4l X -vorbis -xvid x265 vaapi pulseaudio
 x11-terms/kitty X wayland
 net-misc/aria2 bittorrent
 media-libs/gst-plugins-base theora
-media-video/mpv drm sdl gbm vaapi wayland libmpv
+media-video/mpv drm sdl gbm vaapi wayland libmpv pulseaudio
 net-firewall/iptables netlink pcap nftables conntrack
 net-firewall/nftables -python -json xtables
 app-text/tesseract webp
