@@ -20,5 +20,7 @@ done < "${HOME}/package_list"
 
 emerge "${pkgs[@]}" @world || exit 1
 rm -rf /var/cache/binpkgs
-mkdir /var/cache/binpkgs
+git clone --depth=1 https://www.github.com/thecatvoid/gentoo-bin /var/cache/binpkgs
+rm -rf /var/cache/binpkgs/.git
+eclean packages -t 1d -q
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
