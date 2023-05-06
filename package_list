@@ -36,6 +36,7 @@ dev-util/wayland-scanner
 gui-apps/foot
 gui-apps/grim
 gui-apps/swaybg
+gui-apps/swayidle
 gui-apps/swaylock
 gui-apps/waybar
 gui-apps/wf-recorder

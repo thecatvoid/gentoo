@@ -3,5 +3,6 @@
 gui-apps/waybar ~amd64
 gui-apps/wofi ~amd64
 gui-apps/wf-recorder ~amd64
+gui-apps/swayidle ~amd64
 dev-libs/date ~amd64
 dev-python/* ~amd64
