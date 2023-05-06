@@ -18,7 +18,7 @@ do
         pkgs+=("$tmp")
 done < "${HOME}/package_list"
 
-emerge "${pkgs[@]}" || exit 1
+emerge "${pkgs[@]}" @world || exit 1
 rm -rf /var/cache/binpkgs
 mkdir /var/cache/binpkgs
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
