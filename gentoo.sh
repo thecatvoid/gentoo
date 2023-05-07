@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-source ./env
 
 setup_chroot() {
         wget -qnv "${url}${file}" -O "/var/tmp/${file}"
@@ -67,4 +66,4 @@ buildpkgs() {
 
 
 # Exec functions when called as args
-for cmd; do $cmd; done
+for cmd; do source ./env && $cmd; done
