@@ -4,10 +4,7 @@ set -e
 chroot="${HOME}/gentoo"
 
 unmount() {
-	for i in dev proc sys tmp run
-	do
-		sudo umount -Rf "${chroot}/${i}" > /dev/null 2>&1 || true
-	done
+	sudo umount -Rf "${chroot}"/* > /dev/null 2>&1 || true
 }
 
 rootch() {
