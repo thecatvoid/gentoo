@@ -2,7 +2,33 @@
 set -e
 [[ -f ./env ]] && source ./env
 
+chroot="${HOME}/gentoo"
+
+unmount() {
+	for i in dev proc sys tmp run
+	do
+		sudo umount -Rf "${chroot}/${i}" > /dev/null 2>&1 || true
+	done
+}
+
+rootch() {
+	sudo mount --rbind /dev "${chroot}/dev"
+	sudo mount --make-rslave "${chroot}/dev"
+	sudo mount -t proc /proc "${chroot}/proc"
+	sudo mount --rbind /sys "${chroot}/sys"
+	sudo mount --make-rslave "${chroot}/sys"
+	sudo mount --rbind /tmp "${chroot}/tmp"
+	sudo mount --bind /run "${chroot}/run"
+	sudo cp -L /etc/resolv.conf "${chroot}/etc/"
+	sudo cp -a ./* "${chroot}/root/"
+	sudo chroot "${chroot}" /root/gentoo.sh "$@"
+}
+
 setup_chroot() {
+        url="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-desktop-systemd/"
+        file="$(curl -s "$url" | grep -Eo 'href=".*"' | awk -F '>' '{print $1}' |
+                sed 's/href=//g' | sed 's/"//g' |
+                grep -Eo "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
         wget -qnv "${url}${file}" -O "/var/tmp/${file}"
         mkdir "$chroot"
         sudo tar -C "${chroot}" -xpf "/var/tmp/${file}" --xattrs-include='*.*' --numeric-owner 2>/dev/null
