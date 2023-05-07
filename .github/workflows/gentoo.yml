@@ -23,9 +23,6 @@ jobs:
     - name: Build and install pkgs
       run: ./gentoo.sh build
 
-    - name: Make binpkgs
-      run: ./gentoo.sh buildpkgs
-
     - name: Upload binpkgs
       run: |
         export GITHUB_TOKEN=${{ secrets.HUBGIT_TOKEN }}

@@ -38,9 +38,9 @@ setup_build_cmd() {
         rm -rf /etc/portage/
         emerge-webrsync
         cp -af "${HOME}/portage" /etc/
-        sed -i "s/MAKEOPTS=.*/MAKEOPTS=\"-j$(nproc --all)\"/g" /etc/portage/make.conf
+        sed -i "s/^J=.*/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
-        emerge dev-vcs/git sys-kernel/gentoo-sources
+        emerge dev-vcs/git net-misc/aria2
         rm -rf /var/db/repos/* 
         emerge --sync
 }
@@ -50,15 +50,10 @@ build_cmd() {
         qlist -I >> "$list"
         awk -i inplace '!seen[$0]++' "$list"
         while read -r pkg; do pkgs+=("$pkg"); done < "$list"
-        emerge "${pkgs[@]}" || exit 1
-}
-
-buildpkgs_cmd() {
         rm -rf /var/cache/binpkgs/*
-        curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" -o /var/cache/binpkgs/Packages
-        qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' |
-                xargs quickpkg --include-config=y
-        
+        curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
+                -o /var/cache/binpkgs/Packages
+        emerge "${pkgs[@]}" || exit 1
         fixpackages
         emaint --fix binhost
 }
@@ -85,11 +80,6 @@ setup_build() {
 
 build() {
         rootch build_cmd
-        unmount
-}
-
-buildpkgs() {
-        rootch buildpkgs_cmd
         unmount
 }
 
