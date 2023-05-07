@@ -38,6 +38,7 @@ setup_build_cmd() {
         rm -rf /etc/portage/
         emerge-webrsync
         cp -af "${HOME}/portage" /etc/
+        sed -i "s/MAKEOPTS=.*/MAKEOPTS=\"$(nproc --all)\"/g" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
         emerge dev-vcs/git sys-kernel/gentoo-sources
         rm -rf /var/db/repos/* 
@@ -46,7 +47,6 @@ setup_build_cmd() {
         qlist -I >> "$list"
         awk -i inplace '!seen[$0]++' "$list"
         while read -r pkg; do pkgs+=("$pkg"); done < "$list"
-        unmount
 }
 
 build_cmd() {
@@ -63,7 +63,7 @@ buildpkgs_cmd() {
         echo /var/cache/binpkgs/*/* | xargs -n1 | while read -r list; do
         pkg="$(echo ${list}/*.xpak)"
         echo "$pkg" | grep -q ' ' || continue
-        binpkg="$(echo "$pkg" | xargs -n1 | sort -n | tail -1)"
+        binpkg="$(echo "$pkg" | xargs -n1 | grep -o '.*-1.xpak' | sort -n | tail -1)"
         oldbinpkgs=()
         for i in $(echo "$pkg" | sed "s#$binpkg##"); do oldbinpkgs+=("$i"); done
         rm "${oldbinpkgs[@]}"; done
@@ -88,14 +88,17 @@ upload() {
 # We got to do exec function inside gentoo chroot not on runner
 setup_build() {
         rootch setup_build_cmd
+        unmount
 }
 
 build() {
         rootch build_cmd
+        unmount
 }
 
 buildpkgs() {
         rootch buildpkgs_cmd
+        unmount
 }
 
 # Exec functions when called as args
