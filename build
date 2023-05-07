@@ -15,7 +15,7 @@ awk -i inplace '!seen[$0]++' "$list"
 while read -r pkg; do pkgs+=("$pkg"); done < "$list"
 emerge "${pkgs[@]}" || exit 1
 rm -rf /var/cache/binpkgs
-git clone --depth=1 https://www.github.com/thecatvoid/gentoo-bin /var/cache/binpkgs
+git clone --depth=1 https://github.com/thecatvoid/gentoo-bin /var/cache/binpkgs
 rm -rf /var/cache/binpkgs/.git
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
 eclean-pkg --ignore-failure --unique-use --time-limit=1d
