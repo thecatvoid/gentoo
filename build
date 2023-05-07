@@ -18,3 +18,5 @@ git clone --depth=1 https://www.github.com/thecatvoid/gentoo-bin /var/cache/binp
 rm -rf /var/cache/binpkgs/.git
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
 eclean-pkg --ignore-failure --unique-use --time-limit=1d
+fixpackages
+emaint binhost
