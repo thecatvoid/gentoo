@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-[[ -f ./env ]] && source ./env
 
 chroot="${HOME}/gentoo"
 
