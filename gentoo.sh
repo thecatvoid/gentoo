@@ -28,7 +28,7 @@ setup_chroot() {
         file="$(curl -s "$url" | grep -Eo 'href=".*"' | awk -F '>' '{print $1}' |
                 sed 's/href=//g' | sed 's/"//g' |
                 grep -Eo "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
-        wget -qnv "${url}${file}" -O "/var/tmp/${file}"
+        curl -sSL "${url}${file}" -o "/var/tmp/${file}"
         mkdir "$chroot"
         sudo tar -C "${chroot}" -xpf "/var/tmp/${file}" --xattrs-include='*.*' --numeric-owner 2>/dev/null
 }
@@ -38,35 +38,27 @@ setup_build_cmd() {
         rm -rf /etc/portage/
         emerge-webrsync
         cp -af "${HOME}/portage" /etc/
-        sed -i "s/MAKEOPTS=.*/MAKEOPTS=\"$(nproc --all)\"/g" /etc/portage/make.conf
+        sed -i "s/MAKEOPTS=.*/MAKEOPTS=\"-j$(nproc --all)\"/g" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
         emerge dev-vcs/git sys-kernel/gentoo-sources
         rm -rf /var/db/repos/* 
         emerge --sync
+}
+
+build_cmd() {
         list="${HOME}/package_list"
         qlist -I >> "$list"
         awk -i inplace '!seen[$0]++' "$list"
         while read -r pkg; do pkgs+=("$pkg"); done < "$list"
-}
-
-build_cmd() {
         emerge "${pkgs[@]}" || exit 1
 }
 
 buildpkgs_cmd() {
-        rm -rf /var/cache/binpkgs
-        git clone --depth=1 https://github.com/thecatvoid/gentoo-bin /var/cache/binpkgs
-        rm -rf /var/cache/binpkgs/.git
+        rm -rf /var/cache/binpkgs/*
+        curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" -o /var/cache/binpkgs/Packages
         qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' |
                 xargs quickpkg --include-config=y
-
-        echo /var/cache/binpkgs/*/* | xargs -n1 | while read -r list; do
-        pkg="$(echo ${list}/*.xpak)"
-        echo "$pkg" | grep -q ' ' || continue
-        binpkg="$(echo "$pkg" | xargs -n1 | grep -o '.*-1.xpak' | sort -n | tail -1)"
-        oldbinpkgs=()
-        for i in $(echo "$pkg" | sed "s#$binpkg##"); do oldbinpkgs+=("$i"); done
-        rm "${oldbinpkgs[@]}"; done
+        
         fixpackages
         emaint --fix binhost
 }
