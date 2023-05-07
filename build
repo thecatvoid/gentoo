@@ -12,9 +12,9 @@ emerge --sync
 list="${HOME}/package_list"
 qlist -I >> "$list"
 awk -i inplace '!seen[$0]++' "$list"
-emerge "${pkgs[@]}" < "$list" || exit 1
+emerge < "$list" || exit 1
 rm -rf /var/cache/binpkgs
 git clone --depth=1 https://www.github.com/thecatvoid/gentoo-bin /var/cache/binpkgs
 rm -rf /var/cache/binpkgs/.git
-eclean packages -t 1d -q
 qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
+eclean-pkg --ignore-failure --unique-use --time-limit=1d
