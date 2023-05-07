@@ -8,9 +8,7 @@ setup_chroot() {
         sudo tar -C "${chroot}" -xpf "/var/tmp/${file}" --xattrs-include='*.*' --numeric-owner 2>/dev/null
 }
 
-
-setup_build() {
-        rootch
+setup_build_cmd() {
         cd "$HOME" || exit
         source /etc/profile
         rm -rf /etc/portage/
@@ -27,11 +25,11 @@ setup_build() {
         unmount
 }
 
-build() {
+build_cmd() {
         emerge "${pkgs[@]}" || exit 1
 }
 
-buildpkgs() {
+buildpkgs_cmd() {
         rm -rf /var/cache/binpkgs
         git clone --depth=1 https://github.com/thecatvoid/gentoo-bin /var/cache/binpkgs
         rm -rf /var/cache/binpkgs/.git
@@ -53,6 +51,20 @@ upload() {
         git commit -m 'commit'
         git push --set-upstream "https://oauth2:${GITHUB_TOKEN}@github.com/thecatvoid/gentoo-bin" main -f 2>&1 | sed "s/$GITHUB_TOKEN/token/"
 }
+
+# We got to do exec function inside gentoo chroot not on runner
+setup_build() {
+        rootch setup_build_cmd
+}
+
+build() {
+        rootch build_cmd
+}
+
+buildpkgs() {
+        rootch buildpkgs_cmd
+}
+
 
 # Exec functions when called as args
 for cmd; do $cmd; done
