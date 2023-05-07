@@ -32,8 +32,16 @@ buildpkgs_cmd() {
         rm -rf /var/cache/binpkgs
         git clone --depth=1 https://github.com/thecatvoid/gentoo-bin /var/cache/binpkgs
         rm -rf /var/cache/binpkgs/.git
-        qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
-        eclean-pkg --ignore-failure --unique-use --time-limit=1d
+        qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' |
+                xargs quickpkg --include-config=y
+
+        echo /var/cache/binpkgs/*/* | xargs -n1 | while read -r list; do
+        pkg="$(echo ${list}/*.xpak)"
+        echo "$pkg" | grep -q ' ' || continue
+        binpkg="$(echo "$pkg" | xargs -n1 | sort -n | tail -1)"
+        oldbinpkgs=()
+        for i in $(echo "$pkg" | sed "s#$binpkg##"); do oldbinpkgs+=("$i"); done
+        rm "${oldbinpkgs[@]}"; done
         fixpackages
         emaint --fix binhost
 }
@@ -48,7 +56,8 @@ upload() {
         git init -b main
         git add -A
         git commit -m 'commit'
-        git push --set-upstream "https://oauth2:${GITHUB_TOKEN}@github.com/thecatvoid/gentoo-bin" main -f 2>&1 | sed "s/$GITHUB_TOKEN/token/"
+        git push --set-upstream "https://oauth2:${GITHUB_TOKEN}@github.com/thecatvoid/gentoo-bin" main -f 2>&1 |
+                sed "s/$GITHUB_TOKEN/token/"
 }
 
 # We got to do exec function inside gentoo chroot not on runner
@@ -63,7 +72,6 @@ build() {
 buildpkgs() {
         rootch buildpkgs_cmd
 }
-
 
 # Exec functions when called as args
 for cmd; do source ./env && $cmd; done
