@@ -1,8 +1,0 @@
-#!/bin/bash
-set -e
-source ./env
-wget -qnv "${url}${file}" -O "/var/tmp/${file}"
-mkdir "$chroot"
-sudo tar -C "${chroot}" -xpf "/var/tmp/${file}" --xattrs-include='*.*' --numeric-owner 2>/dev/null
-rootch
-unmount

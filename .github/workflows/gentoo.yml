@@ -14,10 +14,19 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Start
-      run: ./start
+    - name: Setup chroot
+      run: ./gentoo.sh setup_chroot
 
-    - name: Upload
+    - name: Chroot and setup gentoo
+      run: ./gentoo.sh setup_build
+
+    - name: Build and install pkgs
+      run: ./gentoo.sh build
+
+    - name: Make binpkgs
+      run: ./gentoo.sh buildpkgs
+
+    - name: Upload binpkgs
       run: |
         export GITHUB_TOKEN=${{ secrets.HUBGIT_TOKEN }}
-        ./upload
+        ./gentoo.sh upload
