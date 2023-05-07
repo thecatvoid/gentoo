@@ -35,7 +35,7 @@ buildpkgs_cmd() {
         qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' | xargs quickpkg --include-config=y
         eclean-pkg --ignore-failure --unique-use --time-limit=1d
         fixpackages
-        emaint binhost
+        emaint --fix binhost
 }
 
 upload() {
