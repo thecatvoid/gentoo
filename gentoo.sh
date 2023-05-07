@@ -46,6 +46,7 @@ build_cmd() {
         list="${HOME}/package_list"
         qlist -I >> "$list"
         awk -i inplace '!seen[$0]++' "$list"
+        pkgs=()
         while read -r pkg; do pkgs+=("$pkg"); done < "$list"
         rm -rf /var/cache/binpkgs/*
         curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
