@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+[[ -f ./env ]] && source ./env
 
 setup_chroot() {
         wget -qnv "${url}${file}" -O "/var/tmp/${file}"
@@ -9,7 +10,6 @@ setup_chroot() {
 
 setup_build_cmd() {
         cd "$HOME" || exit
-        source /etc/profile
         rm -rf /etc/portage/
         emerge-webrsync
         cp -af "${HOME}/portage" /etc/
@@ -74,4 +74,4 @@ buildpkgs() {
 }
 
 # Exec functions when called as args
-for cmd; do source ./env && $cmd; done
+for cmd; do $cmd; done
