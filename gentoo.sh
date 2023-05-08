@@ -2,10 +2,7 @@
 set -e
 
 chroot="${HOME}/gentoo"
-
-unmount() {
-	sudo umount -Rf "${chroot}"/* > /dev/null 2>&1 || true
-}
+trap 'sudo umount -Rf "${chroot}"/* > /dev/null 2>&1 || true' EXIT
 
 rootch() {
 	sudo mount --rbind /dev "${chroot}/dev"
@@ -73,12 +70,10 @@ upload() {
 # We got to do exec function inside gentoo chroot not on runner
 setup_build() {
         rootch setup_build_cmd
-        unmount
 }
 
 build() {
         rootch build_cmd
-        unmount
 }
 
 # Exec functions when called as args
