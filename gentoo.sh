@@ -37,7 +37,7 @@ setup_build_cmd() {
         cp -af "${HOME}/portage" /etc/
         sed -i "s/^J=.*/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
-        FETCHCOMMAND="" emerge dev-vcs/git net-misc/aria2
+        FETCHCOMMAND="/usr/bin/wget -t 5 --passive-ftp \${URI} -P \${DISTDIR}" emerge dev-vcs/git net-misc/aria2
         rm -rf /var/db/repos/* 
         emerge --sync
 }
