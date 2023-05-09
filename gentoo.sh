@@ -1,7 +1,14 @@
 #!/bin/bash
 set -e
 chroot="${HOME}/gentoo"
-trap 'sudo umount -Rf "${chroot}"/* > /dev/null 2>&1 || true' EXIT
+
+unmount() {
+        mount | grep "$HOME/gentoo" | awk '{print $3}' |
+                while read -r $i
+                do
+                        umount -Rf "$i" > /dev/null 2>&1 || true
+                done
+}
 
 rootch() {
         sudo mount --rbind /dev "${chroot}/dev"
@@ -90,3 +97,4 @@ buildpkgs() {
 
 # Exec functions when called as args
 for cmd; do $cmd; done
+trap 'unmount' EXIT
