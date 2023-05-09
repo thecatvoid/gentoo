@@ -23,7 +23,7 @@ bashin() {
 setup_chroot() {
         url="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-desktop-systemd/"
         file="$(curl -s "$url" | grep -Eo 'href=".*"' | awk -F '>' '{print $1}' |
-                sed 's/href=//g' -e 's/"//g' | grep -o "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
+                sed -e 's/href=//g' -e 's/"//g' | grep -o "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
 
         curl -sSL "${url}${file}" -o "/var/tmp/${file}"
         mkdir "$chroot"
