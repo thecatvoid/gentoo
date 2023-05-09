@@ -18,10 +18,10 @@ rootch() {
 }
 
 setup_chroot() {
-        url="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-desktop-systemd/"
+        url="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-systemd/"
         file="$(curl -s "$url" | grep -Eo 'href=".*"' | awk -F '>' '{print $1}' |
                 sed 's/href=//g' | sed 's/"//g' |
-                grep -Eo "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
+                grep -Eo "stage3-amd64-systemd-$(date +%Y).*.tar.xz" | uniq)"
         curl -sSL "${url}${file}" -o "/var/tmp/${file}"
         mkdir "$chroot"
         sudo tar -C "${chroot}" -xpf "/var/tmp/${file}" --xattrs-include='*.*' --numeric-owner 2>/dev/null
@@ -33,7 +33,7 @@ setup_build_cmd() {
         emerge-webrsync
         cp -af "${HOME}/portage" /etc/
         sed -i "s/^J=.*/J=\"$(nproc --all)\"/" /etc/portage/make.conf
-        ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd/ /etc/portage/make.profile
+        ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/systemd/ /etc/portage/make.profile
         emerge dev-vcs/git app-accessibility/at-spi2-core
         rm -rf /var/db/repos/* 
         emerge --sync
