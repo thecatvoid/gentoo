@@ -41,15 +41,18 @@ setup_build_cmd() {
 
 build_cmd() {
         list="${HOME}/package_list"
-        qlist -I >> "$list"
-        awk -i inplace '!seen[$0]++' "$list"
         pkgs=()
         while read -r pkg; do pkgs+=("$pkg"); done < "$list"
-        rm -rf /var/cache/binpkgs/*
-        curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
-                -o /var/cache/binpkgs/Packages
         emerge "${pkgs[@]}" || exit 1
-        fixpackages
+}
+
+buildpkgs_cmd() {
+        rm -rf /var/cache/binpkgs/*
+	curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
+	-o /var/cache/binpkgs/Packages
+	qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' |
+	xargs quickpkg --include-config=y
+	fixpackages
         emaint --fix binhost
 }
 
@@ -74,6 +77,10 @@ setup_build() {
 
 build() {
         rootch build_cmd
+}
+
+buildpkgs() {
+        rootch buildpkgs_cmd
 }
 
 # Exec functions when called as args
