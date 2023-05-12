@@ -21,3 +21,4 @@ gui-apps/swaybg gdk-pixbuf
 sys-apps/busybox -pam static
 virtual/libcrypt static-libs
 sys-libs/libxcrypt static-libs
+media-sound/pulseaudio daemon
