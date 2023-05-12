@@ -4,7 +4,7 @@ chroot="${HOME}/gentoo"
 
 unmount() {
         mount | grep "$HOME/gentoo" | awk '{print $3}' |
-                while read -r $i
+                while read -r i
                 do
                         umount -Rf "$i" > /dev/null 2>&1 || true
                 done
