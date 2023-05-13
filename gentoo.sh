@@ -56,7 +56,7 @@ build_cmd() {
         emerge "${pkgs[@]}" || exit 1
 }
 
-buildpkgs_cmd() {
+build_binpkgs_cmd() {
         rm -rf /var/cache/binpkgs/*
         curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
                 -o /var/cache/binpkgs/Packages
@@ -91,8 +91,8 @@ build() {
         rootch build_cmd
 }
 
-buildpkgs() {
-        rootch buildpkgs_cmd
+build_binpkgs() {
+        rootch build_binpkgs_cmd
 }
 
 # Exec functions when called as args
