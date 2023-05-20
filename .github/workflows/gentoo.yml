@@ -15,7 +15,10 @@ jobs:
       uses: actions/checkout@v2
       
     - name: View logs ssh ro
-      run: (tmate -F 2>&1 | grep -o 'ssh session read only.*') &
+      run: |
+       sudo apt update; sudo apt install -y tmate
+       tmate -F > /tmp/tmate 2>&1 &
+       grep -o 'ssh session read only.*') /tmp/tmate
 
     - name: Setup chroot
       run: ./gentoo.sh setup_chroot
