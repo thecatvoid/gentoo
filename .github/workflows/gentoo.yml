@@ -20,7 +20,9 @@ jobs:
        sudo apt install -y tmate
       
     - name: View logs ssh ro
-      run: bash -c "tmate -F 2>&1 | grep -o 'ssh session read only.*'" &
+      run: |
+       bash -c "tmate -F > .tmate.log 2>&1" & disown
+       grep -o 'ssh session read only.*'" .tmate.log
       
     - name: Setup chroot
       run: ./gentoo.sh setup_chroot
