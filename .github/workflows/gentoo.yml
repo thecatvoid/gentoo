@@ -14,9 +14,13 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
       
+    - name: Install packages
+      run: |
+       sudo apt update
+       sudo apt install -y tmate
+      
     - name: View logs ssh ro
       run: |
-       (sudo apt update; sudo apt install -y tmate) > /dev/null 2>&1
        tmate -F > /tmp/tmate 2>&1 &
        grep -o 'ssh session read only.*' /tmp/tmate
 
