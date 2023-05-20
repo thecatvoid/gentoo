@@ -78,8 +78,8 @@ upload() {
         git init -b main
         git add -A
         git commit -m 'commit'
-        git push --set-upstream "https://oauth2:${GITHUB_TOKEN}@github.com/thecatvoid/gentoo-bin" main -f 2>&1 |
-                sed "s/$GITHUB_TOKEN/token/"
+        git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin" main -f 2>&1 |
+                sed "s/$GIT_TOKEN/token/"
 }
 
 # We got to do exec function inside gentoo chroot not on runner

@@ -28,5 +28,6 @@ jobs:
 
     - name: Upload binpkgs
       run: |
-        export GITHUB_TOKEN=${{ secrets.HUBGIT_TOKEN }}
+        export GIT_TOKEN=${{ secrets.GIT_TOKEN }}
         ./gentoo.sh upload
+        unset GIT_TOKEN
