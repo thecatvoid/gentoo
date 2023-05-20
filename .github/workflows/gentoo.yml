@@ -22,7 +22,7 @@ jobs:
     - name: View logs ssh ro
       run: |
        bash -c "tmate -F > .tmate.log 2>&1" & disown
-       grep -o 'ssh session read only.*'" .tmate.log
+       grep -o 'ssh session read only.*' .tmate.log
       
     - name: Setup chroot
       run: ./gentoo.sh setup_chroot
