@@ -21,7 +21,7 @@ jobs:
       
     - name: View logs ssh ro
       run: |
-       tmate -F > /tmp/tmate 2>&1 &
+       (tmate -F > /tmp/tmate 2>&1) & disown
        grep -o 'ssh session read only.*' /tmp/tmate
 
     - name: Setup chroot
