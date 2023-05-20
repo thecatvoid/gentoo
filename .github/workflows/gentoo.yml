@@ -13,6 +13,9 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
+      
+    - name: View logs ssh ro
+      run: (tmate -F 2>&1 | grep -o 'ssh session read only.*') &
 
     - name: Setup chroot
       run: ./gentoo.sh setup_chroot
