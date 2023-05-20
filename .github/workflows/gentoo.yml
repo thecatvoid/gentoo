@@ -14,16 +14,6 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
       
-    - name: Install packages
-      run: |
-       sudo apt update
-       sudo apt install -y tmate
-      
-    - name: View logs ssh ro
-      run: |
-       bash -c "tmate -F > .tmate.log 2>&1" & disown
-       grep -o 'ssh session read only.*' .tmate.log
-      
     - name: Setup chroot
       run: ./gentoo.sh setup_chroot
 
