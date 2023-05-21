@@ -43,6 +43,7 @@ setup_build_cmd() {
         sed -i "s/^J=.*/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
         emerge dev-vcs/git app-accessibility/at-spi2-core
+        rm -rf /var/db/repos/*
         emerge --sync
         cp -f "${HOME}/package_list" /list
 }
