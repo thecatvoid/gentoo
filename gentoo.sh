@@ -95,5 +95,9 @@ build() {
         rootch build_cmd
 }
 
+build_binpkgs() {
+        rootch build_binpkgs_cmd
+}
+
 # Exec functions when called as args
 for cmd; do $cmd; done
