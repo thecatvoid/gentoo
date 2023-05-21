@@ -36,6 +36,9 @@ setup_chroot() {
 }
 
 setup_build_cmd() {
+        printf '%s\n' 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+        printf '%s\n' 'LANG=en_US.UTF-8' 'LC_ALL=en_US.UTF-8' 'LANGUAGE=en' > /etc/locale.conf
+        locale-gen
         cd "$HOME" || exit
         rm -rf /etc/portage/
         emerge-webrsync
