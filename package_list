@@ -96,7 +96,6 @@ sys-auth/seatd
 sys-block/parted
 sys-boot/efibootmgr
 sys-boot/grub
-sys-devel/clang
 sys-devel/gdb
 sys-fs/btrfs-progs
 sys-fs/dosfstools

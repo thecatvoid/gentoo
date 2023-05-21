@@ -1,13 +1,11 @@
 #!/bin/bash
 set -e
+trap '_unmount' EXIT
 chroot="${HOME}/gentoo"
 
-unmount() {
+_unmount() {
         mount | grep "$HOME/gentoo" | awk '{print $3}' |
-                while read -r i
-                do
-                        umount -Rf "$i" > /dev/null 2>&1 || true
-                done
+                xargs -I{} sudo umount -Rf {} > /dev/null 2>&1 || true
 }
 
 rootch() {
@@ -45,14 +43,16 @@ setup_build_cmd() {
         sed -i "s/^J=.*/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
         emerge dev-vcs/git app-accessibility/at-spi2-core
-        rm -rf /var/db/repos/* 
         emerge --sync
+        cp -f "${HOME}/package_list" /list
 }
 
 build_cmd() {
-        list="${HOME}/package_list"
         pkgs=()
-        while read -r pkg; do pkgs+=("$pkg"); done < "$list"
+        while read -r pkg
+        do pkgs+=("$pkg")
+        done < /list
+
         emerge "${pkgs[@]}" || exit 1
 }
 
@@ -80,7 +80,7 @@ upload() {
         git commit -m 'commit'
         git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin" main -f 2>&1 |
                 sed "s/$GIT_TOKEN/token/"
-}
+        }
 
 # We got to do exec function inside gentoo chroot not on runner
 setup_build() {
@@ -91,10 +91,5 @@ build() {
         rootch build_cmd
 }
 
-build_binpkgs() {
-        rootch build_binpkgs_cmd
-}
-
 # Exec functions when called as args
 for cmd; do $cmd; done
-trap 'unmount' EXIT
