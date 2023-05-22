@@ -75,24 +75,30 @@ build_binpkgs_cmd() {
 upload() {
         repo="https://gitlab.com/thecatvoid/gentoo-bin.git"
         bin="${HOME}/binpkgs"
-        git clone "$repo" "$bin"
+        mkdir -p "$bin"
         cd "$bin" || exit
-        git rm -rf *
-        git remote rm origin
-        git reflog expire --expire=now --all
-        git prune
-        git gc --aggressive --prune=now
-        git clean -f
-        git remote add origin "$repo"
         sudo cp -af "$HOME"/gentoo/var/cache/binpkgs/* ./
         sudo chown -R "${USER}:${USER}" "$bin"
+        
         git config --global user.email "voidcat@tutanota.com"
         git config --global user.name "thecatvoid"
-        git add *
+        
+        curl --header "Authorization: Bearer $GIT_TOKEN" \
+        --request DELETE "https://gitlab.com/api/v4/projects/thecatvoid%2Fgentoo-bin" > /dev/null 2>&1
+        
+        curl --header "Content-Type: application/json" \
+        --header "Authorization: Bearer $GIT_TOKEN" \
+        --data '{"name": "gentoo-bin", "visibility": "public"}' \
+        --request POST "https://gitlab.com/api/v4/projects" > /dev/null 2>&1
+        
+        git remote add origin "$repo"
+        git init -b main
+        git add -A
         git commit -m 'commit'
         git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin.git" main -f 2>&1 |
                 sed "s/$GIT_TOKEN/token/"
-        }
+       
+ }
 
 # We got to do exec function inside gentoo chroot not on runner
 setup_build() {
