@@ -74,12 +74,13 @@ build_binpkgs_cmd() {
 
 upload() {
         bin="${HOME}/binpkgs"
-        sudo cp -af "${HOME}/gentoo/var/cache/binpkgs/" "$bin"
-        sudo chown -R "${USER}:${USER}" "$bin"
+        git clone --depth=1 "https://gitlab.com/thecatvoid/gentoo-bin" "$bin"
         cd "$bin" || exit
+        git rm -rf *
+        sudo cp -af "$HOME"/gentoo/var/cache/binpkgs/* ./
+        sudo chown -R "${USER}:${USER}" "$bin"
         git config --global user.email "voidcat@tutanota.com"
         git config --global user.name "thecatvoid"
-        git init -b main
         git add -A
         git commit -m 'commit'
         git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin" main -f 2>&1 |
