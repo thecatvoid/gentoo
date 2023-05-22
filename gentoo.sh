@@ -91,8 +91,8 @@ upload() {
         --data '{"name": "gentoo-bin", "visibility": "public"}' \
         --request POST "https://gitlab.com/api/v4/projects" > /dev/null 2>&1
         
-        git remote add origin "$repo"
         git init -b main
+        git remote add origin "$repo"
         git add -A
         git commit -m 'commit'
         git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin.git" main -f 2>&1 |
