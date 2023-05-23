@@ -1,1 +1,2 @@
 #=gui-libs/wlroots-0.15.1
+=gui-libs/wlroots-0.16.2
