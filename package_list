@@ -133,3 +133,4 @@ gui-apps/swaylock
 sys-kernel/gentoo-kernel-bin
 net-im/telegram-desktop-bin
 www-client/firefox-bin
+gnome-base/gnome-light
