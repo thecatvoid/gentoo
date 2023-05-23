@@ -86,6 +86,8 @@ upload() {
         curl --header "Authorization: Bearer $GIT_TOKEN" \
         --request DELETE "https://gitlab.com/api/v4/projects/thecatvoid%2Fgentoo-bin" > /dev/null 2>&1
         
+        sleep 10
+        
         curl --header "Content-Type: application/json" \
         --header "Authorization: Bearer $GIT_TOKEN" \
         --data '{"name": "gentoo-bin", "visibility": "public"}' \
