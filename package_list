@@ -35,16 +35,12 @@ dev-util/sysprof-capture
 dev-util/wayland-scanner
 gui-apps/foot
 gui-apps/grim
-gui-apps/swaybg
-gui-apps/swayidle
-gui-apps/swaylock
 gui-apps/waybar
 gui-apps/wf-recorder
 gui-apps/wl-clipboard
 gui-apps/wofi
 gui-libs/gtk
 gui-libs/wlroots
-gui-wm/sway
 media-gfx/imv
 media-libs/alsa-lib
 media-libs/alsa-ucm-conf
