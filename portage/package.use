@@ -22,4 +22,4 @@ sys-apps/busybox -pam static
 virtual/libcrypt static-libs
 sys-libs/libxcrypt static-libs
 media-sound/pulseaudio daemon
-x11-drivers/nvidia-drivers driver -kernel-open persistenced -static-libs tools dist-kernel wayland X abi_x86_64 abi_x86_32
+x11-drivers/nvidia-drivers driver -kernel-open persistenced -static-libs tools dist-kernel wayland X -abi_x86_32
