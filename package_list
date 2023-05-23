@@ -127,4 +127,7 @@ x11-themes/gnome-themes-standard
 x11-themes/gtk-engines-adwaita
 x11-themes/hicolor-icon-theme
 xfce-base/thunar
-x11-wm/qtile
+gui-wm/sway
+gui-apps/swaybg
+gui-apps/swayidle
+gui-apps/swaylock
