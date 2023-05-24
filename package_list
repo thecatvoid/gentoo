@@ -135,3 +135,5 @@ net-im/telegram-desktop-bin
 www-client/firefox-bin
 gui-libs/egl-wayland
 gui-libs/eglexternalplatform
+sys-kernel/linux-firmware
+sys-firmware/intel-microcode
