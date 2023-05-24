@@ -4,7 +4,7 @@ trap '_unmount' EXIT
 chroot="${HOME}/gentoo"
 
 _unmount() {
-        grep "$HOME/gentoo" /proc/mounts | awk '{print $3}' |
+        grep "$chroot" /proc/mounts | awk '{print $3}' |
                 xargs -I{} sudo umount -Rf {} > /dev/null 2>&1 || true
 }
 
