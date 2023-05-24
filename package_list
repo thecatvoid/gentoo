@@ -133,6 +133,5 @@ gui-apps/swaylock
 sys-kernel/gentoo-kernel-bin
 net-im/telegram-desktop-bin
 www-client/firefox-bin
-kde-plasma/plasma-meta
 gui-libs/egl-wayland
 gui-libs/eglexternalplatform
