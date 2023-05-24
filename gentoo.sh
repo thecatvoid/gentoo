@@ -65,8 +65,7 @@ build_binpkgs_cmd() {
         curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
                 -o /var/cache/binpkgs/Packages
 
-        qlist -I | grep -Ev -- 'acct-user/.*|acct-group/.*|virtual/.*|sys-kernel/.*-sources|.*/.*-bin' |
-                xargs quickpkg --include-config=y
+        quickpkg --include-config=y "*/*"
 
         fixpackages
         emaint --fix binhost
