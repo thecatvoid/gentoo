@@ -135,5 +135,4 @@ net-im/telegram-desktop-bin
 www-client/firefox-bin
 gnome-base/gnome-light
 gui-libs/egl-wayland
-gui-libs/egl-gbm
 gui-libs/eglexternalplatform
