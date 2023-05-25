@@ -66,7 +66,7 @@ build_binpkgs_cmd() {
         curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
                 -o /var/cache/binpkgs/Packages
 
-        quickpkg --include-config=y --include-unmodified-config=y "*/*"
+        quickpkg "*/*"
         fixpackages
         emaint --fix binhost
 }
