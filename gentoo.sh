@@ -75,10 +75,9 @@ build_binpkgs_cmd() {
 
 upload() {
         repo="https://gitlab.com/thecatvoid/gentoo-bin.git"
-        bin="${HOME}/binpkgs"
+        bin="${HOME}/binpkgs/"
         mkdir -p "$bin"
-        cd "$bin" || exit
-        sudo cp -af "$HOME"/gentoo/var/cache/binpkgs/ "${bin}/"
+        sudo cp -af "$HOME"/gentoo/var/cache/binpkgs/* "$bin"
         sudo chown -R "${USER}:${USER}" "$bin"
         
         git config --global user.email "voidcat@tutanota.com"
