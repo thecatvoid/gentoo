@@ -63,7 +63,8 @@ build_cmd() {
 }
 
 build_binpkgs_cmd() {
-        rm -rf /var/cache/binpkgs/*
+        rm -rf /var/cache/binpkgs/
+        mkdir -p /var/cache/binpkgs/
         curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
                 -o /var/cache/binpkgs/Packages
 
@@ -77,7 +78,7 @@ upload() {
         bin="${HOME}/binpkgs"
         mkdir -p "$bin"
         cd "$bin" || exit
-        sudo cp -af "$HOME"/gentoo/var/cache/binpkgs/* ./
+        sudo cp -af "$HOME"/gentoo/var/cache/binpkgs/ "${bin}/"
         sudo chown -R "${USER}:${USER}" "$bin"
         
         git config --global user.email "voidcat@tutanota.com"
