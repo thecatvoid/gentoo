@@ -140,3 +140,5 @@ sys-firmware/intel-microcode
 media-fonts/jetbrains-mono
 app-misc/neofetch
 x11-wm/i3
+app-misc/cmatrix
+games-action/supertuxkart
