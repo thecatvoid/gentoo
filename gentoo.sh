@@ -93,6 +93,7 @@ upload() {
         --data '{"name": "gentoo-bin", "visibility": "public"}' \
         --request POST "https://gitlab.com/api/v4/projects" > /dev/null 2>&1
         
+        cd "$bin" || exit 1
         git init -b main
         git remote add origin "$repo"
         git add -A
