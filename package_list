@@ -96,7 +96,7 @@ sys-devel/gdb
 sys-fs/btrfs-progs
 sys-fs/dosfstools
 sys-fs/e2fsprogs
-sys-fs/fuse
+sys-fs/fuse:0
 sys-libs/ncurses
 sys-process/htop
 sys-process/lsof
