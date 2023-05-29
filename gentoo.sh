@@ -50,9 +50,9 @@ setup_build_cmd() {
         emerge dev-vcs/git app-accessibility/at-spi2-core
         rm -rf /var/db/repos/* /var/cache/binpkgs/
         git clone --depth=1 "https://gitlab.com/thecatvoid/gentoo-bin.git" /var/cache/binpkgs
+        emerge --sync
         fixpackages
         emaint --fix binhost
-        emerge --sync
         cp -f "${HOME}/package_list" /list
 }
 
