@@ -6,3 +6,4 @@ dev-python/* ~amd64
 dev-libs/tllist ~amd64
 games-action/supertuxkart ~amd64
 net-misc/yt-dlp **
+sys-fs/fuse:0
