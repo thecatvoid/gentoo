@@ -44,8 +44,9 @@ setup_build_cmd() {
         rm -rf /etc/portage/
         emerge-webrsync
         cp -af "${HOME}/portage" /etc/
-        sed -i "s/^J=.*/J=\"$(nproc --all)\"/" /etc/portage/make.conf
+        sed -i "s/^J=.*$/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
+        source /etc/profile && env-update --no-ldconfig
         emerge dev-vcs/git app-accessibility/at-spi2-core
         rm -rf /var/db/repos/* /var/cache/binpkgs/
         git clone --depth=1 "https://gitlab.com/thecatvoid/gentoo-bin.git" /var/cache/binpkgs
@@ -59,6 +60,7 @@ build_cmd() {
         do pkgs+=("$pkg")
         done < /list
 
+        source /etc/profile && env-update --no-ldconfig
         emerge "${pkgs[@]}" || exit 1
 }
 
