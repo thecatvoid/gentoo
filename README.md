@@ -1,5 +1,6 @@
 # Add this to /etc/portage/binrepos.conf to use the binhost
-`[binpkg-0]
-
+`
+[binpkg-0]
 sync-uri = https://gitlab.com/thecatvoid/gentoo-bin/raw/main/
-priority = 9999`
+priority = 9999
+`
