@@ -50,8 +50,8 @@ get_pkgs(){
         }
 
         _bindir() {
-                xpak=$(find "${bindir}/${pkg}/${basepkg}"*.xpak -maxdepth 1 -type f -printf "%f\n" 2>/dev/null |
-                        sort -V | tail -1 | grep -Eo -- "-[0-9].*")
+                xpak=$(ls -1v "${bindir}/${pkg}/${basepkg}"*.xpak 2>/dev/null |
+                        tail -1 | grep -Eo -- "-[0-9].*")
 
                 tmp=$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)
                 echo "$xpak" | sed "s/-${tmp}//g"
@@ -71,6 +71,7 @@ get_pkgs(){
                         fi
                 done < <(fdver)
         done
+        printf "%s\n" "${pkgs[@]}"
 }
 
 setup_chroot() {
@@ -102,13 +103,14 @@ setup_build_cmd() {
         fixpackages
         emaint --fix binhost
         cp -f "${HOME}/package_list" /list
+        qlist -I >> /list
+        awk -i inplace '!seen[$0]++' /list
 }
 
 build_cmd() {
-        declare -a pkgs
-        set -x
-        get_pkgs
         source /etc/profile && env-update --no-ldconfig
+        declare -a pkgs
+        get_pkgs
         emerge "${pkgs[@]}" || exit 1
 }
 
