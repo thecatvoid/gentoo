@@ -105,6 +105,8 @@ setup_build_cmd() {
 }
 
 build_cmd() {
+        declare -a pkgs
+        set -x
         get_pkgs
         source /etc/profile && env-update --no-ldconfig
         emerge "${pkgs[@]}" || exit 1
