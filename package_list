@@ -149,3 +149,5 @@ x11-misc/dmenu
 x11-misc/xclip
 x11-misc/nitrogen
 app-emulation/qemu
+x11-drivers/nvidia-drivers
+sys-apps/hdparm
