@@ -26,7 +26,6 @@ bashin() {
 }
 
 get_pkgs(){
-        declare -ag pkgs
         bindir="/var/cache/binpkgs"
         basepkg=$(basename "$pkg")
         fdver() {
@@ -67,7 +66,7 @@ get_pkgs(){
                         xpakv="${pkg}${binver}"
 
                         if [[ "${pkgv}" != "${xpakv}" ]]; then
-                                pkgs+=("$pkg")
+                                printf "%s\n" "$pkg" >> /installed
                         fi
                 done < <(fdver)
         done
@@ -104,16 +103,16 @@ setup_build_cmd() {
         cat "${HOME}/package_list" > /list
         qlist -I >> /list
         awk -i inplace '!seen[$0]++' /list
+        get_pkgs
+        awk -i inplace '!seen[$0]++' /installed
+        
 }
 
 build_cmd() {
         source /etc/profile && env-update --no-ldconfig
-        declare -ag pkgs
-        get_pkgs
-        if [[ -n "${pkgs[@]}" ]]; then
-        emerge "${pkgs[@]}" || exit 1
-        printf "%s\n" "${pkgs[@]}" > /installed
-        for i in ${pkgs[@]}; do rm -rf /var/cache/binpkgs/$i; done
+        if [[ -n "$(cat /installed)" ]]; then
+        xargs emerge < /installed || exit 1
+        xargs -I{} rm -rf /var/cache/binpkgs/{} < /installed
         fi
 }
 
@@ -126,9 +125,10 @@ build_binpkgs_cmd() {
 
 upload() {
         repo="https://gitlab.com/thecatvoid/gentoo-bin.git"
-        bin="${HOME}/binpkgs/"
+        bin="${chroot}/../binpkgs/"
         mkdir -p "$bin"
-        sudo cp -af "$HOME"/gentoo/var/cache/binpkgs/* "$bin"
+        sudo rm -rf "$bin"
+        sudo cp -af "${chroot}/var/cache/binpkgs/"* "$bin"
         sudo chown -R "${USER}:${USER}" "$bin"
 
         git config --global user.email "voidcat@tutanota.com"
