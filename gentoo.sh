@@ -26,7 +26,7 @@ bashin() {
 }
 
 get_pkgs(){
-        declare -a pkgs
+        declare -ag pkgs
         bindir="/var/cache/binpkgs"
         basepkg=$(basename "$pkg")
         fdver() {
@@ -109,7 +109,7 @@ setup_build_cmd() {
 
 build_cmd() {
         source /etc/profile && env-update --no-ldconfig
-        declare -a pkgs
+        declare -ag pkgs
         get_pkgs
         emerge "${pkgs[@]}" || exit 1
 }
