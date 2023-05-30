@@ -71,7 +71,6 @@ get_pkgs(){
                         fi
                 done < <(fdver)
         done
-        printf "%s\n" "${pkgs[@]}"
 }
 
 setup_chroot() {
@@ -102,7 +101,7 @@ setup_build_cmd() {
         emerge --sync
         fixpackages
         emaint --fix binhost
-        cp -f "${HOME}/package_list" /list
+        cat "${HOME}/package_list" > /list
         qlist -I >> /list
         awk -i inplace '!seen[$0]++' /list
 }
@@ -111,16 +110,16 @@ build_cmd() {
         source /etc/profile && env-update --no-ldconfig
         declare -ag pkgs
         get_pkgs
+        if [[ -n "${pkgs[@]}" ]]; then
         emerge "${pkgs[@]}" || exit 1
+        printf "%s\n" "${pkgs[@]}" > /installed
+        for i in ${pkgs[@]}; do rm -rf /var/cache/binpkgs/$i; done
+        fi
 }
 
 build_binpkgs_cmd() {
-        rm -rf /var/cache/binpkgs/
-        mkdir -p /var/cache/binpkgs/
-        curl -sS "https://raw.githubusercontent.com/thecatvoid/gentoo-bin/main/Packages" \
-                -o /var/cache/binpkgs/Packages
-
-        quickpkg --include-config=y --include-unmodified-config=y "*/*"
+        mapfile -t installed < /installed
+        quickpkg --include-config=y --include-unmodified-config=y "${installed[@]}"
         fixpackages
         emaint --fix binhost
 }
