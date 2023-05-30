@@ -27,6 +27,8 @@ bashin() {
 
 get_pkgs(){
         declare -a pkgs
+        bindir="/var/cache/binpkgs"
+        basepkg=$(basename "$pkg")
         fdver() {
                 category=$(basename "$pkg")
                 overlay=$(find /var/db/repos/ -wholename "*${pkg}" | awk -F '/' '{print $5}')
@@ -61,8 +63,6 @@ get_pkgs(){
                 while read -r ebuild; do
                         ver=$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed "s/\.ebuild//g")
                         pkgv="${pkg}${ver}"
-                        basepkg=$(basename "$pkg")
-                        bindir="/var/cache/binpkgs"
                         binver=$(_bindir || true)
                         xpakv="${pkg}${binver}"
 
