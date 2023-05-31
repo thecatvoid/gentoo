@@ -46,7 +46,6 @@ get_pkgs(){
                         grep -HEro "$regex" /var/db/repos/*/"${pkg}" | sort -V |
                                 grep -v ".*-9999.*" | tail -1 | grep -Eo ".*.ebuild"
                 fi
-                awk -i inplace '!seen[$0]++' /installed
         }
 
         _binpkg() {
@@ -71,6 +70,7 @@ get_pkgs(){
                         fi
                 done < <(fdver)
         done
+        awk -i inplace '!seen[$0]++' /installed
 }
 
 setup_chroot() {
