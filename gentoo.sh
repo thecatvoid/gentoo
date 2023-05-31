@@ -29,15 +29,15 @@ get_pkgs(){
         bindir="/var/cache/binpkgs"
         basepkg=$(basename "$pkg")
         fdver() {
-                category=$(basename "$pkg")
+                category=$(dirname "$pkg")
                 overlay=$(find /var/db/repos/ -wholename "*${pkg}" | awk -F '/' '{print $5}')
                 branch0=$(grep "::$overlay" /etc/portage/package.accept_keywords | awk '{print $NF}')
                 branch1=$(grep "${pkg}" /etc/portage/package.accept_keywords | awk '{print $NF}')
-                branch2=$(grep "${category}/\*" /etc/portage/package.accept_keywords | awk '{print $NF}')
+                branch2=$(grep -E "${category}/\*|${pkg}" /etc/portage/package.accept_keywords | awk '{print $NF}')
 
                 case amd64 in
-                        "$branch0"|"$branch1"|"$branch2") regex="KEYWORDS=.*[~]amd64[^-]" ;;
-                        *) regex="KEYWORDS=.*[^~]amd64[^-]"
+                        "$branch0"|"$branch1"|"$branch2") regex="KEYWORDS=.*[^~]amd64[^-]" ;;
+                        *) regex="KEYWORDS=.*[~]amd64[^-]"
                 esac
 
                 if grep -q "${pkg}" /etc/portage/package.unmask; then
