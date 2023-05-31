@@ -27,50 +27,54 @@ bashin() {
 }
 
 get_pkgs(){
-        basepkg=$(basename "$pkg")
         fdver() {
                 category=$(dirname "$pkg")
                 overlay=$(find /var/db/repos/ -wholename "*${pkg}" | awk -F '/' '{print $5}')
-                branch0=$(grep "::$overlay" /etc/portage/package.accept_keywords | awk '{print $NF}')
-                branch1=$(grep "${pkg}" /etc/portage/package.accept_keywords | awk '{print $NF}')
-                branch2=$(grep -E "${category}/\*|${pkg}" /etc/portage/package.accept_keywords | awk '{print $NF}')
+                br0=$(grep "::$overlay" /etc/portage/package.accept_keywords | awk '{print $NF}')
+                br1=$(grep -E "${category}/\*|${pkg}" /etc/portage/package.accept_keywords | awk '{print $NF}')
+                
+                if [ "$br0" = "~amd64" -o "$br1" = "~amd64" ]; then
+                        regex="KEYWORDS=.*[~]amd64[^-]"
+                else
+                        regex="KEYWORDS=.*[^~]amd64[^-]"
+                fi
 
-                case amd64 in
-                        "$branch0"|"$branch1"|"$branch2") regex="KEYWORDS=.*[^~]amd64[^-]" ;;
-                        *) regex="KEYWORDS=.*[~]amd64[^-]"
-                esac
-
-                if grep -q "${pkg}" /etc/portage/package.unmask; then
+                if [ -z "$br0" -o -z "$br1" ] && grep -q "${pkg}" /etc/portage/package.unmask; then
                         grep -Eo "${pkg}-[0-9].*" /etc/portage/package.unmask
+
+                elif [ "$br0" = "**" -o "$br1" = "**"  ]; then
+                        ver=$(printf '%s\n' /var/db/repos/*/"${pkg}"/*9999*.ebuild | grep -o "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")
+                        export ver
                 else
                         grep -HEro "$regex" /var/db/repos/*/"${pkg}" | sort -V |
                                 grep -v ".*-9999.*" | tail -1 | grep -Eo ".*.ebuild"
                 fi
+
         }
 
         _binpkg() {
+                basepkg=$(basename "$pkg")
                 xpak=$(ls -1v "${PKGDIR}/${pkg}/${basepkg}"*.xpak 2>/dev/null |
                         tail -1 | grep -Eo -- "-[0-9].*")
 
                 tmp=$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)
-                echo "$xpak" | sed "s/-${tmp}//g"
+                echo "$xpak" | sed "s/${tmp}//g" | sed "s/^-//g"
         }
 
         mapfile -t packages < /list
 
         for pkg in "${packages[@]}"; do
                 while read -r ebuild; do
-                        ver=$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed "s/\.ebuild//g")
-                        pkgv="${pkg}${ver}"
+                        [[ -z "$ver" ]] && ver=$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed -e "s/\.ebuild//g" -e "s/^-//g" -e "s/$\-//g")
                         binver=$(_binpkg || true)
-                        xpakv="${pkg}${binver}"
 
-                        if [[ "${pkgv}" != "${xpakv}" ]]; then
-                                printf "%s\n" "$pkg" >> /installed
+                        if [[ "$ver" != "$binver" ]]; then
+                                printf "%s\n" "$pkg" >> /pkgs
                         fi
+                        unset ver
                 done < <(fdver)
         done
-        awk -i inplace '!seen[$0]++' /installed
+        awk -i inplace '!seen[$0]++' /pkgs
 }
 
 setup_chroot() {
@@ -96,8 +100,8 @@ setup_build_cmd() {
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
         source /etc/profile && env-update --no-ldconfig
         emerge dev-vcs/git app-accessibility/at-spi2-core
-        rm -rf /var/db/repos/* /var/cache/binpkgs/
-        git clone --depth=1 "https://gitlab.com/thecatvoid/gentoo-bin.git" /var/cache/binpkgs
+        rm -rf /var/db/repos/* "$PKGDIR"
+        git clone --depth=1 "https://gitlab.com/thecatvoid/gentoo-bin.git" "$PKGDIR"
         emerge --sync
         fixpackages
         emaint --fix binhost
@@ -105,20 +109,20 @@ setup_build_cmd() {
         qlist -I >> /list
         awk -i inplace '!seen[$0]++' /list
         get_pkgs
-        
+
 }
 
 build_cmd() {
         source /etc/profile && env-update --no-ldconfig
-        if [[ -n "$(cat /installed)" ]]; then
-        xargs emerge < /installed || exit 1
+        if [[ -n "$(cat /pkgs)" ]]; then
+                xargs emerge < /pkgs || exit 1
         fi
 }
 
 build_binpkgs_cmd() {
-        mapfile -t installed < /installed
-        for i in "${installed[@]}"; do rm -rf "${PKGDIR}/${i}"; done
-        quickpkg --include-config=y --include-unmodified-config=y "${installed[@]}"
+        mapfile -t pkgs < /pkgs
+        for i in "${pkgs[@]}"; do rm -rf "${PKGDIR}/${i}"; done
+        quickpkg --include-config=y --include-unmodified-config=y "${pkgs[@]}"
         fixpackages
         emaint --fix binhost
 }
@@ -128,7 +132,7 @@ upload() {
         bin="${chroot}/../binpkgs/"
         sudo rm -rf "$bin"
         mkdir -p "$bin"
-        sudo cp -af "${chroot}/var/cache/binpkgs/"* "$bin"
+        sudo cp -af "${chroot}${PKGDIR}"* "$bin"
         sudo chown -R "${USER}:${USER}" "$bin"
 
         git config --global user.email "voidcat@tutanota.com"
