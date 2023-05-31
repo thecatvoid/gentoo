@@ -43,7 +43,7 @@ get_pkgs(){
                         grep -Eo "${pkg}-[0-9].*" /etc/portage/package.unmask
 
                 elif [ "$br0" = "**" -o "$br1" = "**"  ]; then
-                        ver=$(printf '%s\n' /var/db/repos/*/"${pkg}"/*9999*.ebuild | grep -o "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")
+                        ver=$(printf '%s\n' /var/db/repos/*/"${pkg}"/*9999*.ebuild | grep -o -- "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")
                         export ver
                 else
                         grep -HEro "$regex" /var/db/repos/*/"${pkg}" | sort -V |
@@ -58,7 +58,7 @@ get_pkgs(){
                         tail -1 | grep -Eo -- "-[0-9].*")
 
                 tmp=$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)
-                echo "$xpak" | sed -e "s/${tmp}//g" -e "s/^-//g" -e "s/-$//g"
+                [[ -n "$tmp" ]] && echo "$xpak" | sed -e "s/${tmp}//g" -e "s/^-//g" -e "s/-$//g"
         }
 
         mapfile -t packages < /list
