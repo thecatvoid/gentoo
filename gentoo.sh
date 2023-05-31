@@ -126,8 +126,8 @@ build_binpkgs_cmd() {
 upload() {
         repo="https://gitlab.com/thecatvoid/gentoo-bin.git"
         bin="${chroot}/../binpkgs/"
-        mkdir -p "$bin"
         sudo rm -rf "$bin"
+        mkdir -p "$bin"
         sudo cp -af "${chroot}/var/cache/binpkgs/"* "$bin"
         sudo chown -R "${USER}:${USER}" "$bin"
 
