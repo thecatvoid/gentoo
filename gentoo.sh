@@ -2,6 +2,7 @@
 set -e
 trap '_unmount' EXIT
 chroot="${HOME}/gentoo"
+PKGDIR="/var/cache/binpkgs"
 
 _unmount() {
         grep "$chroot" /proc/mounts | awk '{print $2}' |
@@ -26,7 +27,6 @@ bashin() {
 }
 
 get_pkgs(){
-        bindir="/var/cache/binpkgs"
         basepkg=$(basename "$pkg")
         fdver() {
                 category=$(dirname "$pkg")
@@ -46,10 +46,11 @@ get_pkgs(){
                         grep -HEro "$regex" /var/db/repos/*/"${pkg}" | sort -V |
                                 grep -v ".*-9999.*" | tail -1 | grep -Eo ".*.ebuild"
                 fi
+                awk -i inplace '!seen[$0]++' /installed
         }
 
-        _bindir() {
-                xpak=$(ls -1v "${bindir}/${pkg}/${basepkg}"*.xpak 2>/dev/null |
+        _binpkg() {
+                xpak=$(ls -1v "${PKGDIR}/${pkg}/${basepkg}"*.xpak 2>/dev/null |
                         tail -1 | grep -Eo -- "-[0-9].*")
 
                 tmp=$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)
@@ -62,7 +63,7 @@ get_pkgs(){
                 while read -r ebuild; do
                         ver=$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed "s/\.ebuild//g")
                         pkgv="${pkg}${ver}"
-                        binver=$(_bindir || true)
+                        binver=$(_binpkg || true)
                         xpakv="${pkg}${binver}"
 
                         if [[ "${pkgv}" != "${xpakv}" ]]; then
@@ -104,7 +105,6 @@ setup_build_cmd() {
         qlist -I >> /list
         awk -i inplace '!seen[$0]++' /list
         get_pkgs
-        awk -i inplace '!seen[$0]++' /installed
         
 }
 
@@ -112,12 +112,12 @@ build_cmd() {
         source /etc/profile && env-update --no-ldconfig
         if [[ -n "$(cat /installed)" ]]; then
         xargs emerge < /installed || exit 1
-        xargs -I{} rm -rf /var/cache/binpkgs/{} < /installed
         fi
 }
 
 build_binpkgs_cmd() {
         mapfile -t installed < /installed
+        for i in "${installed[@]}"; do rm -rf "${PKGDIR}/${i}"; done
         quickpkg --include-config=y --include-unmodified-config=y "${installed[@]}"
         fixpackages
         emaint --fix binhost
