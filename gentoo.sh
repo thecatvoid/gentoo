@@ -58,14 +58,14 @@ get_pkgs(){
                         tail -1 | grep -Eo -- "-[0-9].*")
 
                 tmp=$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)
-                echo "$xpak" | sed "s/${tmp}//g" | sed "s/^-//g"
+                echo "$xpak" | sed -e "s/${tmp}//g" -e "s/^-//g" -e "s/-$//g"
         }
 
         mapfile -t packages < /list
 
         for pkg in "${packages[@]}"; do
                 while read -r ebuild; do
-                        [[ -z "$ver" ]] && ver=$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed -e "s/\.ebuild//g" -e "s/^-//g" -e "s/$\-//g")
+                        [[ -z "$ver" ]] && ver=$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed -e "s/\.ebuild//g" -e "s/^-//g")
                         binver=$(_binpkg || true)
 
                         if [[ "$ver" != "$binver" ]]; then
