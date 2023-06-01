@@ -155,3 +155,4 @@ sys-apps/man-pages-posix
 sys-apps/pv
 dev-python/pygments
 dev-vcs/git
+app-emulation/virtio-win
