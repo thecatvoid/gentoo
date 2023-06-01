@@ -131,8 +131,7 @@ upload() {
         repo="https://gitlab.com/thecatvoid/gentoo-bin.git"
         bin="${chroot}/../binpkgs/"
         sudo rm -rf "$bin"
-        mkdir -p "$bin"
-        sudo cp -af "${chroot}${PKGDIR}"* "$bin"
+        sudo cp -axf "${chroot}${PKGDIR}" "$bin"
         sudo chown -R "${USER}:${USER}" "$bin"
 
         git config --global user.email "voidcat@tutanota.com"
