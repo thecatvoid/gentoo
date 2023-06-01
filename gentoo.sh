@@ -91,16 +91,12 @@ setup_build_cmd() {
         printf '%s\n' 'en_US.UTF-8 UTF-8' > /etc/locale.gen
         printf '%s\n' 'LANG=en_US.UTF-8' 'LC_ALL=en_US.UTF-8' 'LANGUAGE=en' > /etc/locale.conf
         locale-gen
-        ln -sf /usr/src/linux /usr/src/linux-"$(uname -r)"
-        cd "$HOME" || exit
-        rm -rf /etc/portage/
-        emerge-webrsync
+        cd "$HOME" || exit 1
+        rm -rf /etc/portage/ /var/db/repos/* "$PKGDIR"
         cp -af "${HOME}/portage" /etc/
         sed -i "s/^J=.*$/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
-        source /etc/profile && env-update --no-ldconfig
-        emerge dev-vcs/git app-accessibility/at-spi2-core
-        rm -rf /var/db/repos/* "$PKGDIR"
+        curl -sSL -o - https://gitlab.com/thecatvoid/gentoo-bin/-/raw/main/dev-vcs/git/git | tar -C / -pixJf - || true
         git clone --depth=1 --jobs $(nproc --all) --branch main --single-branch \
                 "https://gitlab.com/thecatvoid/gentoo-bin.git" "$PKGDIR"
 
@@ -115,7 +111,6 @@ setup_build_cmd() {
 }
 
 build_cmd() {
-        source /etc/profile && env-update --no-ldconfig
         if [[ -n "$(cat /pkgs)" ]]; then
                 xargs emerge --update --newuse < /pkgs || exit 1
         fi
@@ -151,6 +146,7 @@ upload() {
 
         cd "$bin" || exit 1
         rm -rf .git
+        cp -a $(printf "%s\n" dev-vcs/git/* | sort -V | tail -1) dev-vcs/git/git 
         git init -b main
         git remote add origin "$repo"
         git add -A
