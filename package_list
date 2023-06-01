@@ -152,3 +152,4 @@ app-emulation/qemu
 x11-drivers/nvidia-drivers
 sys-apps/hdparm
 sys-apps/man-pages-posix
+sys-apps/pv
