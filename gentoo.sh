@@ -101,7 +101,9 @@ setup_build_cmd() {
         source /etc/profile && env-update --no-ldconfig
         emerge dev-vcs/git app-accessibility/at-spi2-core
         rm -rf /var/db/repos/* "$PKGDIR"
-        git clone --depth=1 "https://gitlab.com/thecatvoid/gentoo-bin.git" "$PKGDIR"
+        git clone --depth=1 --jobs $(nproc --all) --branch main --single-branch \
+                "https://gitlab.com/thecatvoid/gentoo-bin.git" "$PKGDIR"
+
         emerge --sync
         fixpackages
         emaint --fix binhost
