@@ -47,7 +47,7 @@ get_pkgs(){
                         export ver
                 else
                         grep -HEro "$regex" /var/db/repos/*/"${pkg}" |
-                        grep -v ".*-9999.*" | tail -1 | grep -Eo ".*.ebuild" | sort -V
+                        grep -v ".*-9999.*" | grep -Eo ".*.ebuild" | sort -V | tail -1
                 fi
 
         }
@@ -74,7 +74,7 @@ get_pkgs(){
                         unset ver
                 done < <(fdver)
         done
-        awk -i inplace '!seen[$0]++' /pkgs
+        [[ -f /pkgs ]] && awk -i inplace '!seen[$0]++' /pkgs
 }
 
 setup_chroot() {
