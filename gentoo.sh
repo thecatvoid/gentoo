@@ -115,7 +115,7 @@ setup_build_cmd() {
 build_cmd() {
         source /etc/profile && env-update --no-ldconfig
         if [[ -n "$(cat /pkgs)" ]]; then
-                xargs emerge --changed-use < /pkgs || exit 1
+                xargs emerge --update --newuse < /pkgs || exit 1
         fi
 }
 
