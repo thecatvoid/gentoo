@@ -46,8 +46,8 @@ get_pkgs(){
                         ver=$(printf '%s\n' /var/db/repos/*/"${pkg}"/*9999*.ebuild | grep -o -- "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")
                         export ver
                 else
-                        grep -HEro "$regex" /var/db/repos/*/"${pkg}" | sort -V |
-                                grep -v ".*-9999.*" | tail -1 | grep -Eo ".*.ebuild"
+                        grep -HEro "$regex" /var/db/repos/*/"${pkg}" |
+                        grep -v ".*-9999.*" | tail -1 | grep -Eo ".*.ebuild" | sort -V
                 fi
 
         }
