@@ -85,10 +85,9 @@ setup_chroot() {
         url="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-desktop-systemd/"
         file="$(curl -s "$url" | grep -Eo 'href=".*"' | awk -F '>' '{print $1}' |
                 sed -e 's/href=//g' -e 's/"//g' | grep -o "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
-
-        curl -sSL "${url}${file}" -o "/var/tmp/${file}"
-        mkdir "$chroot"
-        sudo tar -C "${chroot}" -xpf "/var/tmp/${file}" --xattrs-include='*.*' --numeric-owner 2>/dev/null
+        
+        mkdir -p "$chroot"
+        curl -sSL -o - "${url}${file}" | sudo tar -C "${chroot}" -xipJf - --xattrs-include='*.*' --numeric-owner 2>/dev/null || true
 }
 
 setup_build_cmd() {
