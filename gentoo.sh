@@ -100,8 +100,8 @@ setup_build_cmd() {
         sed -i "s/^J=.*$/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
         mkdir -p "$PKGDIR"
-        curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" | tar -C "$PKGDIR" -xif - || true
-        tar -C / --strip-components="1" -xf $(printf "%s\n" ${PKGDIR}/dev-vcs/git/* | sort -V | tail -1) || true
+        curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" | tar -C "$PKGDIR" --strip-components="1" -xif - || true
+        tar -C / -xf $(printf "%s\n" ${PKGDIR}/dev-vcs/git/* | sort -V | tail -1) || true
         emerge --sync
         fixpackages
         emaint --fix binhost
