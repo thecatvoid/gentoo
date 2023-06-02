@@ -3,7 +3,6 @@ set -e
 trap '_unmount' EXIT
 chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
-mkdir -p "$PKGDIR"
 
 _unmount() {
         grep "$chroot" /proc/mounts | awk '{print $2}' |
@@ -101,6 +100,7 @@ setup_build_cmd() {
         cp -af "${HOME}/portage" /etc/
         sed -i "s/^J=.*$/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
+        mkdir -p "$PKGDIR"
         curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" | tar -C "$PKGDIR" -xif - || true
         emerge --sync
         fixpackages
@@ -130,7 +130,7 @@ upload() {
         repo="https://gitlab.com/thecatvoid/gentoo-bin.git"
         bin="${chroot}/../binpkgs/"
         sudo rm -rf "$bin"
-        sudo cp -axf "${chroot}${PKGDIR}" "$bin"
+        sudo cp -axf "${chroot}/${PKGDIR}" "$bin"
         sudo chown -R "${USER}:${USER}" "$bin"
 
         git config --global user.email "voidcat@tutanota.com"
@@ -147,8 +147,6 @@ upload() {
                 --request POST "https://gitlab.com/api/v4/projects" > /dev/null 2>&1
 
         cd "$bin" || exit 1
-        rm -rf .git
-        cp -a $(printf "%s\n" dev-vcs/git/* | sort -V | tail -1) dev-vcs/git/git 
         git init -b main
         git remote add origin "$repo"
         git add -A
