@@ -58,6 +58,7 @@ get_pkgs(){
 
         _binpkg() {
                 basepkg=$(basename "$pkg")
+                binfile=$(ls -1v "${PKGDIR}/${pkg}/${basepkg}"*.xpak 2>/dev/null | tail -1)
                 xpak=$(ls -1v "${PKGDIR}/${pkg}/${basepkg}"*.xpak 2>/dev/null |
                         tail -1 | grep -Eo -- "-[0-9].*")
 
@@ -72,7 +73,7 @@ get_pkgs(){
                         [[ -z "$ver" ]] && ver=$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed -e "s/\.ebuild//g" -e "s/^-//g")
                         binver=$(_binpkg || true)
 
-                        if [[ "$ver" != "$binver" ]]; then
+                        if [[ "$ver" != "$binver" ]] && [[ ! -s "$binfile" ]] ; then
                                 printf "%s\n" "$pkg" >> /pkgs
                         fi
                         unset ver
