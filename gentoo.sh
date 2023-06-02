@@ -3,6 +3,7 @@ set -e
 trap '_unmount' EXIT
 chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
+mkdir -p "$PKGDIR"
 
 _unmount() {
         grep "$chroot" /proc/mounts | awk '{print $2}' |
@@ -100,10 +101,7 @@ setup_build_cmd() {
         cp -af "${HOME}/portage" /etc/
         sed -i "s/^J=.*$/J=\"$(nproc --all)\"/" /etc/portage/make.conf
         ln -sf /var/db/repos/gentoo/profiles/default/linux/amd64/17.1/desktop/systemd /etc/portage/make.profile
-        curl -sSL -o - https://gitlab.com/thecatvoid/gentoo-bin/-/raw/main/dev-vcs/git/git | tar -C / -pixJf - || true
-        git clone --depth=1 --jobs $(nproc --all) --branch main --single-branch \
-                "https://gitlab.com/thecatvoid/gentoo-bin.git" "$PKGDIR"
-
+        curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" | tar -C "$PKGDIR" -xif - || true
         emerge --sync
         fixpackages
         emaint --fix binhost
