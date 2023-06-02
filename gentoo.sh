@@ -27,6 +27,11 @@ bashin() {
 }
 
 get_pkgs(){
+        grep_cmd(){
+                grep -HEro "${@}" /var/db/repos/*/"${pkg}" |
+                        grep -v ".*-9999.*" | grep -Eo ".*.ebuild" | sort -V | tail -1
+
+        }
         fdver() {
                 category=$(dirname "$pkg")
                 overlay=$(find /var/db/repos/ -wholename "*${pkg}" | awk -F '/' '{print $5}')
@@ -46,8 +51,7 @@ get_pkgs(){
                         ver=$(printf '%s\n' /var/db/repos/*/"${pkg}"/*9999*.ebuild | grep -o -- "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")
                         export ver
                 else
-                        grep -HEro "$regex" /var/db/repos/*/"${pkg}" |
-                        grep -v ".*-9999.*" | grep -Eo ".*.ebuild" | sort -V | tail -1
+                        grep_cmd "$regex" || grep_cmd "KEYWORDS=.*[~]amd64[^-]"
                 fi
 
         }
