@@ -116,7 +116,7 @@ setup_build_cmd() {
 }
 
 build_cmd() {
-        if [[ -n "$(cat /pkgs)" ]]; then
+        if [[ -f /pkgs ]] && [[ -n "$(cat /pkgs)" ]]; then
                 xargs emerge --update --newuse < /pkgs || exit 1
         fi
 }
