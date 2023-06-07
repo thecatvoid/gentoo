@@ -121,8 +121,8 @@ get_pkgs(){
 
             mkdir -p "$PKGDIR"
 
-            curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" 
-            | tar -C "$PKGDIR" --strip-components="1" -xif - || true
+            curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" \
+                    | tar -C "$PKGDIR" --strip-components="1" -xif - || true
 
             tar -C / -xf $(printf "%s\n" ${PKGDIR}/dev-vcs/git/* | sort -V | tail -1) || true
 
