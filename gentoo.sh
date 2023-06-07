@@ -45,15 +45,13 @@ get_pkgs(){
 
 			if [ -z "$br0" -o -z "$br1" ] && grep -q "${PN}" /etc/portage/package.unmask; then
 				grep -Eo "${PN}-[0-9].*" /etc/portage/package.unmask
-
 			elif [ "$br0" = "**" -o "$br1" = "**"  ]; then
-				ver=$(printf "%s\n" /var/db/repos/*/"${PN}"/*9999*.ebuild |
-					grep -o -- "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")
-									export ver
-								elif [[ -n $(grep_cmd "$regex") ]]; then
-									grep_cmd "$regex"
-								else
-									grep_cmd "KEYWORDS=.*[~]amd64[^-]"
+				ver=$(printf "%s\n" /var/db/repos/*/"${PN}"/*9999*.ebuild | grep -o -- "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")
+				export ver
+			elif [[ -n $(grep_cmd "$regex") ]]; then
+				grep_cmd "$regex"
+			else
+				grep_cmd "KEYWORDS=.*[~]amd64[^-]"
 			fi
 
 		}
