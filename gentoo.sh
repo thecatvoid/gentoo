@@ -117,6 +117,7 @@ get_pkgs(){
 
 	build_cmd() {
 		if [[ -f /pkgs ]] && [[ -n "$(cat /pkgs)" ]]; then
+			emerge sys-apps/portage
 			xargs emerge --update --newuse < /pkgs || exit 1
 		fi
 	}
