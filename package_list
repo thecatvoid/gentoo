@@ -218,3 +218,4 @@ sci-mathematics/lpsolve
 sys-libs/zlib
 virtual/glu
 virtual/opengl
+games-emulation/ppsspp
