@@ -156,3 +156,4 @@ sys-apps/pv
 dev-python/pygments
 dev-vcs/git
 app-emulation/virtio-win
+app-office/libreoffice-bin
