@@ -3,7 +3,7 @@ name: Run
 on:
   schedule:
     - cron: '0 0 * * *'
-  push:
+      #  push:
   workflow_dispatch:
 
 jobs:
