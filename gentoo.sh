@@ -6,9 +6,12 @@ PKGDIR="/var/cache/binpkgs"
 
 _unmount() {
     awk -v chroot="$chroot" "\$2 ~ chroot { system( \"sudo umount -Rf \" \$2 ) }" /proc/mounts
+    sudo umount -l /tmp
 }
 
 rootch() {
+    sudo mount -o rw ramfs -t ramfs /tmp
+    sudo chmod 1777 /tmp
     sudo mount --rbind /dev "${chroot}/dev"
     sudo mount --make-rslave "${chroot}/dev"
     sudo mount -t proc /proc "${chroot}/proc"
