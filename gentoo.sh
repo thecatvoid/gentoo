@@ -5,7 +5,7 @@ chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
 
 _unmount() {
-    awk -v chroot="$chroot" "\$2 ~ chroot { system( \"sudo umount -Rf \" \$2 ) }" /proc/mounts
+    awk -v chroot="$chroot" "\$2 ~ chroot { system( \"sudo umount -Rf \" \$2 >/dev/null || true ) }" /proc/mounts
     sudo umount -l /tmp
 }
 
