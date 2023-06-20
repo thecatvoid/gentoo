@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-trap '_unmount' EXIT
+[[ $(whoami) != root ]] && trap '_unmount' EXIT
 chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
 
