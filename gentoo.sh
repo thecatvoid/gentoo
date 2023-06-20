@@ -1,17 +1,26 @@
 #!/bin/bash
-set -e
-[[ $(whoami) != root ]] && trap '_unmount' EXIT
+set -euo pipefail
+[[ $(id -u) -ne 0  ]] && trap '_unmount' EXIT
 chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
 
 _unmount() {
-    awk -v chroot="$chroot" "\$2 ~ chroot { system( \"sudo umount -Rf \" \$2 >/dev/null || true ) }" /proc/mounts
-    sudo umount -l /tmp
+    awk -v chroot="$chroot" "\$2 ~ chroot { system( \"sudo umount -Rf \" \$2 ) }" /proc/mounts
 }
 
+
 rootch() {
-    sudo mount -o rw ramfs -t ramfs /tmp
-    sudo chmod 1777 /tmp
+    tmp="$(findmnt /tmp | grep -o ramfs || true)"
+
+    if [[ -z "$tmp" ]]; then
+        sudo mount -o rw,noatime ramfs -t ramfs /tmp
+        sudo chmod 1777 /tmp
+    else
+        sudo mount -o remount,rw,noatime ramfs -t ramfs /tmp
+        sudo chmod 1777 /tmp
+    fi
+    unset tmp
+
     sudo mount --rbind /dev "${chroot}/dev"
     sudo mount --make-rslave "${chroot}/dev"
     sudo mount -t proc /proc "${chroot}/proc"
