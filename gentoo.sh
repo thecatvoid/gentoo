@@ -103,7 +103,9 @@ get_pkgs(){
 
     done
 
-    [[ -f /pkgs ]] && awk -i inplace '!seen[$0]++' /pkgs
+    if [[ -f /pkgs ]]; then
+        awk -i inplace '!seen[$0]++' /pkgs || true
+    fi || true
 }
 
 setup_chroot() {
