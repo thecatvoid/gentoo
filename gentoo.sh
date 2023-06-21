@@ -1,12 +1,12 @@
 #!/bin/bash
 
-set -euox pipefail
+set -euo pipefail
 
 chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
 
 unmount() {
-    awk -v chroot="$chroot" "\$2 ~ chroot { system( \"sudo umount -Rf \" \$2 ) }" /proc/mounts 2>/dev/null || true
+    awk -v chroot="$chroot" "\$2 ~ chroot { system( \"sudo umount -Rf \" \$2 \" 2>/dev/null || true\" ) }" /proc/mounts
 }
 
 [[ $(id -u) -ne 0  ]] && trap 'unmount' EXIT
@@ -77,7 +77,7 @@ binpkg() {
     binfile=$(ls -1v "${PKGDIR}/${PN}/${basepkg}"*.xpak 2>/dev/null | tail -1)
     xpak=$(ls -1v "${PKGDIR}/${PN}/${basepkg}"*.xpak 2>/dev/null | tail -1 | grep -Eo -- "-[0-9].*")
     tmp=$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)
-    
+
     [[ -n "$tmp" ]] && echo "$xpak" | sed -e "s/${tmp}//g" -e "s/^-//g" -e "s/-$//g"
 }
 
