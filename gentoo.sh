@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -euox pipefail
 
 chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
@@ -129,9 +129,9 @@ setup_build_cmd() {
 
     tar -C / -xf "$(printf "%s\n" ${PKGDIR}/dev-vcs/git/* | sort -V | tail -1)" || true
 
-    emerge --sync
-    fixpackages
-    emaint --fix binhost
+    emerge --sync || true
+    fixpackages || true
+    emaint --fix binhost || true
 
     cat "${HOME}/package_list" > /list
     qlist -I >> /list
