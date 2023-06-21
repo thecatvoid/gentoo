@@ -227,5 +227,4 @@ media-fonts/noto
 media-libs/libpulse
 media-sound/pulseaudio-daemon
 sys-apps/toybox
-sys-fs/fuse:0
 x11-drivers/xf86-video-intel
