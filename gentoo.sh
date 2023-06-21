@@ -6,7 +6,7 @@ chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
 
 unmount() {
-    awk -v chroot="$chroot" '$2 ~ chroot { result = $2; print result }' /proc/mounts | xargs -I{} sudo umount -Rf {} 2>/dev/null || true
+    awk -v chroot="$chroot" '$2 ~ chroot { result = $2; print result }' /proc/mounts || true | xargs -I{} sudo umount -Rf {} 2>/dev/null || true
 }
 
 [[ $(id -u) -ne 0  ]] && trap 'unmount' EXIT
