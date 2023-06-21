@@ -7,3 +7,4 @@ games-action/supertuxkart ~amd64
 net-misc/yt-dlp **
 dev-python/coloredlog ~amd64
 sys-fs/fuse:0
+sys-apps/toybox **

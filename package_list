@@ -220,3 +220,12 @@ virtual/glu
 virtual/opengl
 games-emulation/ppsspp
 sys-power/powertop
+app-portage/eix
+app-shells/dash
+dev-perl/Perl-Tidy
+media-fonts/noto
+media-libs/libpulse
+media-sound/pulseaudio-daemon
+sys-apps/toybox
+sys-fs/fuse:0
+x11-drivers/xf86-video-intel
