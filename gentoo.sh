@@ -14,10 +14,10 @@ rootch() {
 
     if [[ -z "$tmp" ]]; then
         sudo mount -o rw,noatime ramfs -t ramfs /tmp
-        sudo chmod a+rwx /tmp
+        sudo chmod 1777 /tmp
     else
         sudo mount -o remount,rw,noatime ramfs -t ramfs /tmp
-        sudo chmod a+rwx /tmp
+        sudo chmod 1777 /tmp
     fi
     unset tmp
 
