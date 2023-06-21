@@ -6,11 +6,11 @@ chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
 
 unmount() {
-    awk -v chroot="$chroot" '$2 ~ chroot { result = $2; print result }' /proc/mounts | while read -r i; do
-    sudo umount -Rf "$i" 2>/dev/null || true; done
+    (awk -v chroot="$chroot" '$2 ~ chroot { result = $2; print result }' /proc/mounts | while read -r i; do
+    sudo umount -Rf "$i" 2>/dev/null || true; done) || true
 }
 
-[[ $(id -u) -ne 0  ]] && trap 'unmount' EXIT
+[[ "$(id -u)" -ne 0  ]] && trap 'unmount' EXIT
 
 rootch() {
     tmp="$(findmnt /tmp | grep -o ramfs || true)"
@@ -65,7 +65,7 @@ fdver() {
         ver="$(printf "%s\n" /var/db/repos/*/"${PN}"/*9999*.ebuild | grep -o -- "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")"
         export ver
 
-    elif [[ -n $(grep_cmd "$regex") ]]; then
+    elif [[ -n "$(grep_cmd "$regex")" ]]; then
         grep_cmd "$regex"
     else
         grep_cmd "KEYWORDS=.*[~]amd64[^-]"
@@ -74,10 +74,10 @@ fdver() {
 }
 
 binpkg() {
-    basepkg=$(basename "${PN}")
-    binfile=$(ls -1v "${PKGDIR}/${PN}/${basepkg}"*.xpak 2>/dev/null | tail -1)
-    xpak=$(ls -1v "${PKGDIR}/${PN}/${basepkg}"*.xpak 2>/dev/null | tail -1 | grep -Eo -- "-[0-9].*")
-    tmp=$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)
+    basepkg="$(basename "${PN}")"
+    binfile="$(ls -1v "${PKGDIR}/${PN}/${basepkg}"*.xpak 2>/dev/null | tail -1)"
+    xpak="$(ls -1v "${PKGDIR}/${PN}/${basepkg}"*.xpak 2>/dev/null | tail -1 | grep -Eo -- "-[0-9].*")"
+    tmp="$(echo "$xpak" | rev | awk -F '-' '{print $1}' | rev)"
 
     [[ -n "$tmp" ]] && echo "$xpak" | sed -e "s/${tmp}//g" -e "s/^-//g" -e "s/-$//g"
 }
@@ -89,7 +89,7 @@ get_pkgs(){
         while read -r ebuild; do
             [[ -z "$ver" ]] && ver="$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed -e "s/\.ebuild//g" -e "s/^-//g")"
 
-            binver=$(binpkg || true)
+            binver="$(binpkg || true)"
 
             if [[ "$ver" != "$binver" ]]; then
                 echo "$PN" >> /pkgs
@@ -130,9 +130,9 @@ setup_build_cmd() {
 
     tar -C / -xf "$(printf "%s\n" ${PKGDIR}/dev-vcs/git/* | sort -V | tail -1)" || true
 
-    emerge --sync || true
-    fixpackages || true
-    emaint --fix binhost || true
+    emerge --sync
+    fixpackages
+    emaint --fix binhost
 
     cat "${HOME}/package_list" > /list
     qlist -I >> /list
