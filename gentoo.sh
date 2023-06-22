@@ -1,19 +1,17 @@
 #!/bin/bash
 
-set -euox pipefail
-
 chroot="${HOME}/gentoo"
 PKGDIR="/var/cache/binpkgs"
 
 unmount() {
-    (awk -v chroot="$chroot" '$2 ~ chroot { result = $2; print result }' /proc/mounts | while read -r i; do
-    sudo umount -Rf "$i" 2>/dev/null || true; done) || true
+    awk -v chroot="$chroot" '$2 ~ chroot { result = $2; print result }' /proc/mounts | while read -r i; do
+    sudo umount -Rf "$i" 2>/dev/null || true; done
 }
 
 [[ "$(id -u)" -ne 0  ]] && trap 'unmount' EXIT
 
 rootch() {
-    tmp="$(findmnt /tmp | grep -o ramfs)" || true
+    tmp="$(findmnt /tmp | grep -o ramfs)"
 
     if [[ -z "$tmp" ]]; then
         sudo mount -o rw,noatime ramfs -t ramfs /tmp
@@ -89,7 +87,7 @@ get_pkgs(){
         while read -r ebuild; do
             [[ -z "$ver" ]] && ver="$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed -e "s/\.ebuild//g" -e "s/^-//g")"
 
-            binver="$(binpkg)" || true
+            binver="$(binpkg)"
 
             if [[ "$ver" != "$binver" ]]; then
                 echo "$PN" >> /pkgs
@@ -104,8 +102,8 @@ get_pkgs(){
     done
 
     if [[ -f /pkgs ]]; then
-        awk -i inplace '!seen[$0]++' /pkgs || true
-    fi || true
+        awk -i inplace '!seen[$0]++' /pkgs
+    fi
 }
 
 setup_chroot() {
