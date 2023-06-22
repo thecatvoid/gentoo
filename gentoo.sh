@@ -13,7 +13,7 @@ unmount() {
 [[ "$(id -u)" -ne 0  ]] && trap 'unmount' EXIT
 
 rootch() {
-    tmp="$(findmnt /tmp | grep -o ramfs || true)"
+    tmp="$(findmnt /tmp | grep -o ramfs)" || true
 
     if [[ -z "$tmp" ]]; then
         sudo mount -o rw,noatime ramfs -t ramfs /tmp
@@ -47,7 +47,7 @@ grep_cmd(){
 fdver() {
     category="$(dirname "${PN}")"
     overlay="$(find /var/db/repos/ -wholename "*${PN}" | awk -F '/' '{print $5}')"
-    br0="$(grep "::$overlay" /etc/portage/package.accept_keywords | awk '{print $NF}')"
+    br0="$(grep "::$overlay" /etc/portage/package.accept_keywords | awk '{print $NF}' )"
     br1="$(grep -E "${category}/\*|${PN}" /etc/portage/package.accept_keywords | awk '{print $NF}')"
 
     if [ "$br0" = "~amd64" -o "$br1" = "~amd64" ]; then
@@ -89,7 +89,7 @@ get_pkgs(){
         while read -r ebuild; do
             [[ -z "$ver" ]] && ver="$(echo "$ebuild" | grep -Eo -- "-[0-9].*" | sed -e "s/\.ebuild//g" -e "s/^-//g")"
 
-            binver="$(binpkg || true)"
+            binver="$(binpkg)" || true
 
             if [[ "$ver" != "$binver" ]]; then
                 echo "$PN" >> /pkgs
