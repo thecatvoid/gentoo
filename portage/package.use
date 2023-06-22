@@ -23,4 +23,13 @@ virtual/libcrypt static-libs
 sys-libs/libxcrypt static-libs
 media-sound/pulseaudio daemon
 media-libs/libcanberra pulseaudio
-x11-drivers/nvidia-drivers driver -kernel-open persistenced static-libs tools dist-kernel wayland X -abi_x86_32
+
+## nvidia 32bit
+x11-drivers/nvidia-drivers driver -kernel-open persistenced static-libs tools dist-kernel wayland X abi_x86_32
+media-libs/libglvnd abi_x86_32
+x11-libs/libX11 abi_x86_32
+x11-libs/libXext abi_x86_32
+x11-libs/libxcb abi_x86_32
+x11-libs/libXau abi_x86_32
+x11-libs/libXdmcp abi_x86_32
+##
