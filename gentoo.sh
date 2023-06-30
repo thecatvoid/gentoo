@@ -60,7 +60,9 @@ fdver() {
 
     elif [ "$br0" = "**" -o "$br1" = "**"  ]; then
 
-        ver="$(printf "%s\n" /var/db/repos/*/"${PN}"/*9999*.ebuild | grep -o -- "-9999.*.ebuild" | sed "s/\.ebuild//g" | sed "s/^-//g")"
+        ver="$(printf "%s\n" /var/db/repos/*/"${PN}"/*9999*.ebuild | grep -o -- "-9999.*.ebuild" | \
+            sed "s/\.ebuild//g" | sed "s/^-//g")"
+
         export ver
 
     elif [[ -n "$(grep_cmd "$regex")" ]]; then
@@ -109,7 +111,9 @@ get_pkgs(){
 setup_chroot() {
     mkdir -p "$chroot"
     url="https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-desktop-systemd/"
-    file="$(curl -s "$url" | grep -Eo 'href=".*"' | awk -F '>' '{print $1}' | sed -e 's/href=//g' -e 's/"//g' | grep -o "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
+    file="$(curl -s "$url" | grep -Eo 'href=".*"' | awk -F '>' '{print $1}' | \
+        sed -e 's/href=//g' -e 's/"//g' | grep -o "stage3-amd64-desktop-systemd-$(date +%Y).*.tar.xz" | uniq)"
+
     curl -sSL -o - "${url}${file}" | sudo tar -C "${chroot}" -xipJf - --xattrs-include='*.*' --numeric-owner 2>/dev/null || true
 }
 
@@ -126,7 +130,8 @@ setup_build_cmd() {
 
     mkdir -p "$PKGDIR"
 
-    curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" | tar -C "$PKGDIR" --strip-components="1" -xif - || true
+    curl -sSL -o - "https://gitlab.com/thecatvoid/gentoo-bin/-/archive/main/gentoo-bin-main.tar" | \
+        tar -C "$PKGDIR" --strip-components="1" -xif - || true
 
     tar -C / -xf "$(printf "%s\n" ${PKGDIR}/dev-vcs/git/* | sort -V | tail -1)" || true
 
@@ -167,20 +172,25 @@ upload() {
     git config --global user.email "voidcat@tutanota.com"
     git config --global user.name "thecatvoid"
 
-    curl --header "Authorization: Bearer $GIT_TOKEN" --request DELETE "https://gitlab.com/api/v4/projects/thecatvoid%2Fgentoo-bin" > /dev/null 2>&1
+    curl --header "Authorization: Bearer ${GIT_TOKEN}" \
+        --request DELETE "https://gitlab.com/api/v4/projects/thecatvoid%2Fgentoo-bin" > /dev/null 2>&1
 
     sleep 10
 
-    curl --header "Content-Type: application/json" --header "Authorization: Bearer $GIT_TOKEN" --data '{"name": "gentoo-bin", "visibility": "public"}' --request POST "https://gitlab.com/api/v4/projects" > /dev/null 2>&1
+    curl --header "Content-Type: application/json" \
+        --header "Authorization: Bearer ${GIT_TOKEN}" \
+        --data '{"name": "gentoo-bin", "visibility": "public"}' \
+        --request POST "https://gitlab.com/api/v4/projects" > /dev/null 2>&1
 
     cd "$bin" || exit 1
     git init -b main
     git remote add origin "$repo"
     git add -A
     git commit -m 'commit'
-    git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin.git" main -f 2>&1 | sed "s/$GIT_TOKEN/token/g"
+    git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin.git" main -f 2>&1 | \
+        sed "s/${GIT_TOKEN}/token/g"
 
-}
+    }
 
 # We got to do exec function inside gentoo chroot not on runner
 setup_build() {
@@ -196,4 +206,4 @@ build_binpkgs() {
 }
 
 # Exec functions when called as args
-for cmd; do $cmd; done
+for cmd; do ${cmd}; done
