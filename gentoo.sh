@@ -188,7 +188,7 @@ upload() {
     git add -A
     git commit -m 'commit'
     git push --set-upstream "https://oauth2:${GIT_TOKEN}@gitlab.com/thecatvoid/gentoo-bin.git" main -f 2>&1 | \
-        sed "s/${GIT_TOKEN}/token/g"
+        sed "s/${GIT_TOKEN}/token/g";
 
     }
 
