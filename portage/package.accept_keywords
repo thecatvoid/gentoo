@@ -11,3 +11,4 @@ sys-apps/toybox ~amd64
 app-emulation/virtio-win ~amd64
 dev-python/coloredlogs ~amd64
 dev-python/humanfriendly ~amd64
+lxde-base/lxterminal ~amd64
