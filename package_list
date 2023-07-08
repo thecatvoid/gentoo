@@ -229,3 +229,4 @@ media-sound/pulseaudio-daemon
 sys-apps/toybox
 dev-util/shellcheck-bin
 net-misc/mosh
+lxde-base/lxterminal
